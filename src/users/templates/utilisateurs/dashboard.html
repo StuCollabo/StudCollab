@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - UDSN Archives</title>
+    <link rel="stylesheet" href="{% static 'utilisateurs/css/style_accueil.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'utilisateurs/css/dashboard.css' %}">
+            
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo"><a href="{% url 'accueil' %}">UDSN Archives</a></div>
+            <div class="user-profile">
+                <form action="{% url 'logout' %}" method="post" class="btn">
+                    {% csrf_token %}
+                    <button type="submit" class="btn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <div class="welcome-message">
+            <h1 id="welcomeTitle">{{dashboard_title}}</h1>
+            <p>Manage and share your documents</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-file-upload"></i>
+                <h3 id="uploadCount">0</h3>
+                <p>Fichiers téléversés</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-building"></i>
+                <h3>4</h3>
+                <p>Établissements</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>16</h3>
+                <p>Parcours disponibles</p>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h2>Actions rapides</h2>
+            <div class="actions-grid">
+                <a href="{% url 'depot' %}" class="action-btn">
+                    <i class="fas fa-upload"></i>
+                    Nouveau transfert
+                </a>
+                <a href="{% url 'documents' %}" class="action-btn">
+                    <i class="fas fa-folder-open"></i>
+                    Voir mes documents
+                </a>
+                <a href="{% url 'modify_profile' %}" class="action-btn">
+                    <i class="fas fa-user-edit"></i>
+                    Modifier mon profil
+                </a>
+                <a href="{% url 'aide' %}" class="action-btn">
+                    <i class="fas fa-question-circle"></i>
+                    Aide
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 UDSN Archive. Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>

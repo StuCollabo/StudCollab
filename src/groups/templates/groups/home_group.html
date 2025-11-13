@@ -1,0 +1,26 @@
+<!doctype>
+<html>
+<head>
+  <title>{{group.name}}</title>
+</head>
+
+<body>
+  <h1>{{group.name}}</h1>
+  <!--<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Create</button>
+  </form>-->
+  <p>
+    Your verification code is {{group.invit_code}}.
+  </p>
+{% if documents %}
+  {% for document in documents %}
+    <p>{{document.title}} - <a href="{{document.file.url}}">Download</a></p>
+  {% endfor %}
+{% else %}
+  <h3>There's no documents available</h3>
+{% endif %}
+  <p>Upload <a href="{% url 'upload_in_group' group.id %}">here</a>
+</body>
+</html>

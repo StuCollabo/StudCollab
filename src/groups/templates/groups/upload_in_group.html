@@ -1,0 +1,24 @@
+<!doctype>
+<html>
+<head>
+  <title>{{group.name}} - upload</title>
+</head>                                     
+<body>
+  <h1>{{group.name}} - upload</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Upload</button>
+  </form>
+  {% if messages %}
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+  {% endif %}
+  {% if form.errors %}
+    {% for error in form.errors %}
+      {{error}}
+    {% endfor %}
+  {% endif %}
+</body>
+</html>

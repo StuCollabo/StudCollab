@@ -1,0 +1,26 @@
+<!doctype>
+<html>
+<head>
+  <title>My groups</title>
+</head>
+
+<body>
+  <h1>My groups</h1>
+  <!--<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Create</button>
+  </form>-->
+  <ul>
+  {% if groups %}
+    {% for group in groups %}
+      <li> <a href="{% url 'home_group' group.id %}">{{group.name}}</a></li>
+    {% endfor %}
+  {% else %}
+    <h4>You don't belong to any groups yet.</h4>
+  {% endif %}
+  </ul>
+  <p><a href="{% url 'create_group' %}">Create</a> your group</p>
+  <p><a href="{% url 'join_group' %}">Join</a> your group</p>
+</body>
+</html>

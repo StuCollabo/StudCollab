@@ -1,0 +1,24 @@
+<!doctype>
+<html>
+<head>
+  <title>Join a group</title>
+</head>
+
+<body>
+  <h1>Join a group</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Join</button>
+  </form>
+  {% if messages %}
+    {% for message in messages %}
+      {{message|safe}}
+    {% endfor %}
+  {% endif %}
+  <p>
+    <h2>Want to create a group?</h2>
+    <a href="{% url 'create_group' %}">Create</a>
+  </p>
+</body>
+</html>

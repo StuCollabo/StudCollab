@@ -1,0 +1,145 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Utilisateur - UDSN Archives</title>
+    <link rel="stylesheet" href="{% static 'utilisateurs/css/style_accueil.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'utilisateurs/css/profile.css' %}">
+
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo"><a href="{% url 'accueil' %}">UDSN Archives</a></div>
+            <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>Tableau de bord</a>
+            <a href="{% url 'depot' %}"><i class="fas fa-upload"></i>Transfert</a>
+            <a href="{% url 'documents' %}"><i class="fas fa-folder"></i>Documents</a>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=User&background=e53935&color=fff" alt="Photo de profil" id="navAvatar">
+                <span id="navUsername">{{request.user.username}}</span>
+                <a href="{% url 'logout' %}" class="btn"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="https://ui-avatars.com/api/?name=User&background=e53935&color=fff" alt="Photo de profil" id="profileAvatar">
+                <label class="avatar-upload" for="avatarInput">
+                    <i class="fas fa-camera"></i>
+                    <input type="file" id="avatarInput" style="display: none" accept="image/*">
+                </label>
+            </div>
+            <h1 class="profile-name" id="profileName">{{request.user.username}}</h1>
+            <p class="profile-email" id="profileEmail">{{request.user.email}}</p>
+        </div>
+
+
+
+
+        <section class="profile-section">
+            <h2 class="section-title"><i class="fas fa-user-edit"></i>Informations personnelles</h2>
+            <form id="personalInfoForm" method="POST">
+              {% csrf_token %}
+                <div class="input-group">
+                    <label for="fullName">{{info_form.username.label_tag}}</label>
+                    <!--<input type="text" id="fullName" name="fullName" required>-->
+                    {{info_form.username}}
+                </div>
+                <div class="input-group">
+                    <label for="email">{{info_form.email.label_tag}}</label>
+                    <!--<input type="email" id="email" name="email" required>-->
+                    {{info_form.email}}
+                </div>
+                <button type="submit" class="save-btn" name="submit_personal">
+                    <i class="fas fa-save"></i>
+                    Enregistrer les modifications
+                </button>
+{% if info_form.errors %}
+  <ul>
+  {% for field, errors in info_form.errors.items %}
+    {% for error in errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  {% endfor %}
+  </ul>
+{% endif %}
+            </form>
+        </section>
+
+
+        <section class="profile-section">
+  {% if messages %}
+   {% for message in messages %}
+     {{message}}
+   {% endfor %}
+  {% endif %}
+            <h2 class="section-title"><i class="fas fa-lock"></i>Sécurité</h2>
+            <form id="securityForm" method="POST">
+              {% csrf_token %}
+                <div class="input-group">
+                    <label for="currentPassword">{{password_form.old_password.label_tag}}</label>
+                    <!--<input type="password" id="currentPassword" name="currentPassword" required>-->
+                    {{password_form.old_password}}
+                </div>
+                <div class="input-group">
+                    <label for="newPassword">{{password_form.new_password1.label_tag}}</label>
+<!--                    <input type="password" id="newPassword" name="newPassword" required>-->
+                        {{password_form.new_password1}}
+                </div>
+                <div class="input-group">
+                    <label for="confirmPassword">{{password_form.new_password2.label_tag}}</label>
+<!--                    <input type="password" id="confirmPassword" name="confirmPassword" required>-->
+                        {{password_form.new_password2}}
+                </div>
+                <button type="submit" class="save-btn" name="submit_password">
+                    <i class="fas fa-key"></i>
+                    Modifier le mot de passe
+                </button>
+            </form>
+{% if password_form.errors %}
+  <ul>
+  {% for field, errors in password_form.errors.items %}
+    {% for error in errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  {% endfor %}
+  </ul>
+{% endif %}
+        </section>
+
+        <section class="profile-section">
+            <h2 class="section-title"><i class="fas fa-bell"></i>Préférences de notification</h2>
+            <div class="notification-settings">
+                <div class="preference-item">
+                    <input type="checkbox" id="emailNotif" checked>
+                    <label for="emailNotif">Recevoir les notifications par e-mail</label>
+                </div>
+                <div class="preference-item">
+                    <input type="checkbox" id="updateNotif" checked>
+                    <label for="updateNotif">M'informer des mises à jour importantes</label>
+                </div>
+                <div class="preference-item">
+                    <input type="checkbox" id="shareNotif" checked>
+                    <label for="shareNotif">Notifications de partage de documents</label>
+                </div>
+            </div>
+        </section>
+
+        <div class="delete-account">
+            <a href="#" class="delete-link" onclick="confirmDelete()">
+                <i class="fas fa-trash-alt"></i> Supprimer mon compte
+            </a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 UDSN Archive. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
