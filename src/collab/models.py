@@ -1,6 +1,9 @@
 from django.db import models
-from utilisateurs.models import CustomUser
+from users.models import User
 from groups.models import Group
+import hashlib
+from django.core.exceptions import ValidationError
+
 
 class ActivityLog(models.Model):
   group = models.ForeignKey(Group, on_delete=models.CASCADE)
@@ -11,22 +14,11 @@ class ActivityLog(models.Model):
 class Task(models.Model):
   group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='tasks')
   title = models.CharField(max_length=255)
-  description = models.TextField(blank=True)
   assigned_to = models.ForeignKey(CustomUser, null=True,
     blank=True, on_delete=models.SET_NULL)
   completed = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True)
 
-
-
-
-
-from django.db import models
-import hashlib
-from groups.models import Group
-from utilisateurs.models import CustomUser
-from django.core.exceptions import ValidationError
-from . import Matiere, DocumentType
 
 
 class BaseDocument(models.Model):
@@ -36,7 +28,7 @@ class BaseDocument(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     url = models.URLField(max_length=500, null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
-      null=True, blank=True)
+      null=True)
 
     class Meta:
         abstract = True
@@ -55,17 +47,6 @@ class BaseDocument(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
-
-class PublicDocument(BaseDocument):
-  subject = models.ForeignKey(Matiere,
-    on_delete=models.SET_NULL, null=True, blank=True)
-  type = models.ForeignKey(DocumentType,
-    on_delete=models.SET_NULL, null=True, blank=True)
-  is_pub = models.BooleanField(default=True)
-
-  def clean(self):
-    pass
 
 
 class GroupDocument(BaseDocument):

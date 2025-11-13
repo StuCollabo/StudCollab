@@ -20,7 +20,7 @@ def modify_user_info(request):
       if info_form.is_valid():
         info_form.save()
         messages.success(request, "Account updated successfully")
-#        return redirect("dashboard")
+        return redirect("dashboard")
       else:
         messages.info(request, "Something went wrong (bis)")
 
@@ -34,7 +34,7 @@ def modify_user_info(request):
       else:
         messages.info(request, "Something went wrong")
 
-  return render(request, "utilisateurs/modify_user.html", context)
+  return render(request, "users/modify_user.html", context)
 
 def show_dashboard(request):
   if request.user.username.endswith("s"):
@@ -44,14 +44,10 @@ def show_dashboard(request):
 
   context = {"user":request.user,
     "dashboard_title":dashboard_title}
-  return render(request, "utilisateurs/dashboard.html", context)
+  return render(request, "users/dashboard.html", context)
 
 def show_profile(request):
-  return render(request, "utilisateurs/profile.html")
-
-def logout_user(request):
-  return redirect("accueil")
-
+  return render(request, "users/profile.html")
 
 def signin_signup(request):
   if request.user.is_authenticated:
@@ -82,4 +78,4 @@ def signin_signup(request):
         if "__all__" in signin_form.errors:
           messages.info(request, settings.MESSAGE_SIGNIN)
 
-  return render(request, "utilisateurs/signin_signup.html", context)
+  return render(request, "users/signin_signup.html", context)

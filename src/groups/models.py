@@ -1,12 +1,12 @@
 from django.db import models
-from utilisateurs.models import CustomUser
+from users.models import User
 import uuid
 
 class Group(models.Model):
   name = models.CharField(max_length=200)
-  members = models.ManyToManyField(CustomUser, related_name="GroupUser")
+  members = models.ManyToManyField(User, related_name="GroupUser")
   invit_code = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-  creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+  creator = models.ForeignKey(User, on_delete=models.CASCADE,
     related_name="groupes_crees", null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   expires_at = models.DateTimeField(null=True, blank=True)

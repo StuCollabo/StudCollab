@@ -1,25 +1,21 @@
-{% load static %}
-
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion & Inscription - UDSN Archives</title>
-    <link rel="stylesheet" href="{% static 'utilisateurs/css/style.css' %}">
+    <title>Login & Signup</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'utilisateurs/css/signin_signup.css' %}">
 </head>
 
 
 <body>
     <div class="background-pattern"></div>
     <header>
-      <a href="{% url 'accueil' %}">
+      <a href="{% url 'home' %}">
         <div class="logo">      
               <i class="fas fa-archive">
               </i>
-            UDSN Archives
+            StuCollab
         </div>
       </a>
     </header>
@@ -52,21 +48,19 @@
                 <div class="input-group">
                     <label for="loginEmail">{{signin_form.username.label_tag}}</label>
                     <i class="fas fa-envelope"></i>
-                    <!--<input type="email" id="loginEmail" name="loginEmail" required placeholder="exemple@email.com">
-                -->   {{signin_form.username}}
+                       {{signin_form.username}}
                 </div>
                 <div class="input-group">
                     <label for="loginPassword">{{signin_form.password.label_tag}}</label>
                     <i class="fas fa-lock"></i>
-<!--                    <input type="password" id="loginPassword" name="loginPassword" required placeholder="Votre mot de passe">
--->                   {{signin_form.password}}
+                   {{signin_form.password}}
                 </div>
                 <button type="submit" name="signin_submit">Se connecter</button>
                 <div class="form-footer">
-                    <a href="#">Mot de passe oublié ?</a>
+                    <a href="#">Forgotten password?</a>
                 </div>
                 <div class="social-login">
-                    <p>Ou connectez-vous avec</p>
+                    <p>Or login with</p>
                     <div class="social-buttons">
                         <button type="button" class="social-button">
                             <i class="fab fa-google"></i>
@@ -87,31 +81,23 @@
                     <label for="registerName">{{signup_form.username.label_tag}}</label>
                     <i class="fas fa-user"></i>
                       {{signup_form.username}}
-<!--                    <input type="text" id="registerName" name="registerName" required placeholder="Ex.: geome3445" >
--->                </div>
+                </div>
                 <div class="input-group">
                     <label for="registerEmail">{{signup_form.email.label_tag}}</label>
                     <i class="fas fa-envelope"></i>
                       {{signup_form.email}}
-<!--                    <input type="email" id="registerEmail" name="registerEmail" required placeholder="example@mail.com" <!--value="{{form.email.value}}">
--->                </div>
+                </div>
                 <div class="input-group">
                     <label for="registerPassword">{{signup_form.password1.label_tag}}</label>
                     <i class="fas fa-lock"></i>
                       {{signup_form.password1}}
-<!--                    <input type="password" id="registerPassword" name="registerPassword" required placeholder="Create a password" <!--value="{{form.password1.value}}">
--->                </div>
+                </div>
                 <div class="input-group">
                     <label for="registerPassword">{{signup_form.password2.label_tag}}</label>
                     <i class="fas fa-lock"></i>
                       {{signup_form.password2}}
-<!--                    <input type="password" id="registerPassword" name="registerPassword" required placeholder="Confirm password" <!--value="{{form.password2.value}}">
--->
                 </div>
                 <button type="submit" name="signup_submit">S'inscrire</button>
-                <div class="form-footer">
-                    En vous inscrivant, vous acceptez nos <a href="#">conditions d'utilisation</a>
-                </div>
             </form>
         </div>
     </div>

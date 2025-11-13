@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import JoinGroupForm, CreateGroupForm
-from groups.models import Group
+from .models import Group
 import uuid
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from fichiers.models import GroupDocument
+from collab.models import GroupDocument
 
 @login_required
 def list_groups(request):
@@ -61,4 +61,5 @@ def create_group(request):
       return redirect("home_group", id=group.id)
 
   return render(request, "groups/create_group.html", context)
+
 

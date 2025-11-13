@@ -1,5 +1,5 @@
 from django import forms
-from groups.models import Group
+from .models import Group
 
 class CreateGroupForm(forms.ModelForm):
   class Meta:
@@ -13,6 +13,6 @@ class CreateGroupForm(forms.ModelForm):
 
 class JoinGroupForm(forms.Form):
   invit_code = forms.CharField(
-    max_length=36, 
+    max_length=36,
     label="Invitation code"
   )
