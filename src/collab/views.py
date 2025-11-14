@@ -7,11 +7,11 @@ from groups.models import Group
 
 @login_required
 def upload(request, id):
-  form = UploadInGroupForm()
+  form = Upload()
   group = Group.objects.get(id=id)
   context = {"form":form, "group":group}
   if request.method == "POST":
-    form = UploadInGroupForm(request.POST, request.FILES)
+    form = Upload(request.POST, request.FILES)
     if form.is_valid():
       doc = form.save(commit=False)
       doc.group = group

@@ -1,0 +1,24 @@
+{% extends 'base/body.html' %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div>
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+  <a href="{% url 'list_groups' %}">My Groups</a>
+</div>
+{% endif %}
+
+<h1>Welcome on StuCollab</h1>
+<p>Mathieu MATONGO is a young student in CS major. While receiving his group's work, 
+he noticed people are use to make a group with people whose homes are near to others.
+So Mathieu thought about a platform where Student and maybe other type of people
+can collaborate, sending some documents or assigning tasks or even work together in real-time on the same document. 
+</p>
+
+<p>Feel free to <a href="{% url 'signin_signup' %}">create an account</a> or
+<a href="{% url 'signin_signup' %}">login</a> in order to have access to our product. </p>
+ 
+<p>For now, we have a total of {{count_users}} users.</p>
+
+<p>No worry about the UI, I'll make it better soon.</p>
+{% endblock %}

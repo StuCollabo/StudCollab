@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My docs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<a href="{% url 'home' %}">Home</a>
+<a href="{% url 'list_groups' %}">My groups</a>
+<h1>My docs</h1>
+<ul>
+{% if docs %}
+  {% for doc in docs %}
+  <li>
+    <p>{{doc.title}} - <a href="{{doc.file.url}}">Download</a> - <a href="#">Remove</a></p>
+    <p>in {{doc.group.name}} -  <a href="{% url 'home_group' doc.group.id %}">Enter</a>
+  </li>
+  {% endfor %}
+{% else %}
+  <h3>You uploaded no documents</h3>
+{% endif %}
+</ul>
+</body>

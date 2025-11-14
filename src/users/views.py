@@ -5,8 +5,10 @@ from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+from collab.models import GroupDocument
 
-
+@login_required
 def modify_user_info(request):
   info_form = ModifyUserInfoForm(instance=request.user)
   password_form = PasswordChangeForm(request.user)
@@ -36,6 +38,8 @@ def modify_user_info(request):
 
   return render(request, "users/modify_user.html", context)
 
+
+@login_required
 def show_dashboard(request):
   if request.user.username.endswith("s"):
     dashboard_title = f"{request.user.username}' space"
@@ -46,8 +50,13 @@ def show_dashboard(request):
     "dashboard_title":dashboard_title}
   return render(request, "users/dashboard.html", context)
 
-def show_profile(request):
-  return render(request, "users/profile.html")
+
+@login_required
+def get_user_docs(request):
+  docs = GroupDocument.objects.filter(user=request.user)
+  context = {"docs":docs}
+  return render(request, "users/user_docs.html", context)
+
 
 def signin_signup(request):
   if request.user.is_authenticated:

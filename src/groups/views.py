@@ -17,7 +17,7 @@ def list_groups(request):
   return render(request, "groups/list_groups.html", context)
 
 @login_required
-def home_group(request, id):
+def get_home_group(request, id):
   group = get_object_or_404(Group, id=id)
   documents = GroupDocument.objects.filter(group=group)
   context = {"group":group, "documents":documents}

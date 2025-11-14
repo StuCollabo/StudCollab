@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,20 +9,20 @@
 <body>
     <header class="header">
         <nav class="nav">
-            <div class="logo"><a href="{% url 'accueil' %}">UDSN Archives</a></div>
+            <div class="logo"><a href="{% url 'home' %}">StuCollab</a></div>
             <div class="user-profile">
-                <form action="{% url 'logout' %}" method="post" class="btn">
+                <form action="{% url 'logout' %}" method="POST" class="btn">
                     {% csrf_token %}
                     <button type="submit" class="btn"><i class="fas fa-sign-out-alt"></i>Logout</button>
                 </form>
             </div>
+            <a href="{% url 'list_groups' %}">My groups</a>
         </nav>
     </header>
 
     <main class="dashboard">
         <div class="welcome-message">
             <h1 id="welcomeTitle">{{dashboard_title}}</h1>
-            <p>Manage and share your documents</p>
         </div>
 
         <div class="stats-grid">
@@ -37,7 +36,7 @@
         <div class="quick-actions">
             <h2>Actions rapides</h2>
             <div class="actions-grid">
-                <a href="{% url 'documents' %}" class="action-btn">
+                <a href="{% url 'user_docs' %}" class="action-btn">
                     <i class="fas fa-folder-open"></i>
                     See my docs
                 </a>

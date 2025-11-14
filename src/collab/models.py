@@ -7,14 +7,14 @@ from django.core.exceptions import ValidationError
 
 class ActivityLog(models.Model):
   group = models.ForeignKey(Group, on_delete=models.CASCADE)
-  user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+  user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
   action = models.CharField(max_length=255)
   created_at = models.DateTimeField(auto_now_add=True)
 
 class Task(models.Model):
   group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='tasks')
   title = models.CharField(max_length=255)
-  assigned_to = models.ForeignKey(CustomUser, null=True,
+  assigned_to = models.ForeignKey(User, null=True,
     blank=True, on_delete=models.SET_NULL)
   completed = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True)
@@ -27,7 +27,7 @@ class BaseDocument(models.Model):
     hash = models.CharField(max_length=64, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     url = models.URLField(max_length=500, null=True, blank=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
       null=True)
 
     class Meta:
