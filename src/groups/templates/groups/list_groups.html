@@ -5,16 +5,26 @@
 </head>
 
 <body>
+  <a href="{% url 'home' %}">Home</a>
   <h1>My groups</h1>
-  <!--<form method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Create</button>
-  </form>-->
   <ul>
+  {% if messages %}
+    {% for message in messages %}
+      <p>{{message}}</p>
+    {% endfor %}
+  {% endif %}
   {% if groups %}
     {% for group in groups %}
-      <li> <a href="{% url 'home_group' group.id %}">{{group.name}}</a></li>
+      <li> <a href="{% url 'home_group' group.id %}">{{group.name}}</a>
+    {% if group.creator == request.user %}
+      <form action="{% url 'delete_group' group.id %}" method="POST">
+        {% csrf_token %}
+         <button type="submit">
+          delete
+         </button>
+      </form>
+    {% endif %}
+</li>
     {% endfor %}
   {% else %}
     <h4>You don't belong to any groups yet.</h4>

@@ -1,12 +1,24 @@
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, ModifyUserInfoForm
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from .forms import SignUpForm, ModifyUserInfoForm, LowercaseAuthenticationForm
+from django.contrib.auth import authenticate, login, update_session_auth_hash, logout
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from collab.models import GroupDocument
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+@login_required
+def delete_user(request):
+  if request.method == "POST":
+    user = request.user
+    logout(request)
+    user.delete()
+    messages.success(request, "Account deleted successfully.")
+    return HttpResponseRedirect(reverse('home'))
+  return  HttpResponseRedirect(reverse('dashboard'))
 
 @login_required
 def modify_user_info(request):
@@ -35,7 +47,6 @@ def modify_user_info(request):
         messages.success(request, "Mot de passe modifié avec succès !")
       else:
         messages.info(request, "Something went wrong")
-
   return render(request, "users/modify_user.html", context)
 
 
@@ -45,9 +56,10 @@ def show_dashboard(request):
     dashboard_title = f"{request.user.username}' space"
   else:
     dashboard_title = f"{request.user.username}'s space"
-
+  count_docs = GroupDocument.objects.filter(user=request.user).count()
   context = {"user":request.user,
-    "dashboard_title":dashboard_title}
+    "dashboard_title":dashboard_title,
+    "count_docs":count_docs}
   return render(request, "users/dashboard.html", context)
 
 
@@ -60,7 +72,8 @@ def get_user_docs(request):
 
 def signin_signup(request):
   if request.user.is_authenticated:
-    return redirect("accueil")
+    messages.info(request, "You're already authenticated")
+    return redirect("home")
 
   signin_form = AuthenticationForm()
   signup_form = SignUpForm()
@@ -78,13 +91,14 @@ def signin_signup(request):
         return redirect(next_url)
 
     elif "signin_submit" in request.POST:
-      signin_form = AuthenticationForm(request, data=request.POST)
+      signin_form = LowercaseAuthenticationForm(request, data=request.POST)
       if signin_form.is_valid():
         login(request, signin_form.get_user())
         next_url = request.GET.get("next") or '/'
         return redirect(next_url)
       else:
         if "__all__" in signin_form.errors:
-          messages.info(request, settings.MESSAGE_SIGNIN)
+          print(signin_form.errors)
+          messages.info(request, "You messed up.")
 
   return render(request, "users/signin_signup.html", context)

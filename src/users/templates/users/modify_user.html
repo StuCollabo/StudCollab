@@ -9,25 +9,25 @@
 <body>
     <header class="header">
         <nav class="nav">
-            <div class="logo"><a href="{% url 'accueil' %}">UDSN Archives</a></div>
-            <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>Tableau de bord</a>
+            <div class="logo"><a href="{% url 'home' %}">StuCollab</a></div>
+            <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>Dashboard</a>
             <div class="user-profile">
                 <img src="https://ui-avatars.com/api/?name=User&background=e53935&color=fff" alt="Photo de profil" id="navAvatar">
                 <span id="navUsername">{{request.user.username}}</span>
-                <a href="{% url 'logout' %}" class="btn"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
+                <a href="{% url 'logout' %}" class="btn"><i class="fas fa-sign-out-alt"></i>Logout</a>
             </div>
         </nav>
     </header>
 
     <main class="profile-container">
         <div class="profile-header">
-            <div class="profile-avatar">
+            <!--<div class="profile-avatar">
                 <img src="https://ui-avatars.com/api/?name=User&background=e53935&color=fff" alt="Photo de profil" id="profileAvatar">
                 <label class="avatar-upload" for="avatarInput">
                     <i class="fas fa-camera"></i>
                     <input type="file" id="avatarInput" style="display: none" accept="image/*">
                 </label>
-            </div>
+            </div>-->
             <h1 class="profile-name" id="profileName">{{request.user.username}}</h1>
             <p class="profile-email" id="profileEmail">{{request.user.email}}</p>
         </div>
@@ -36,7 +36,7 @@
 
 
         <section class="profile-section">
-            <h2 class="section-title"><i class="fas fa-user-edit"></i>Informations personnelles</h2>
+            <h2 class="section-title"><i class="fas fa-user-edit"></i>Personal informations</h2>
             <form id="personalInfoForm" method="POST">
               {% csrf_token %}
                 <div class="input-group">
@@ -72,7 +72,7 @@
      {{message}}
    {% endfor %}
   {% endif %}
-            <h2 class="section-title"><i class="fas fa-lock"></i>Sécurité</h2>
+            <h2 class="section-title"><i class="fas fa-lock"></i>Security</h2>
             <form id="securityForm" method="POST">
               {% csrf_token %}
                 <div class="input-group">
@@ -106,9 +106,13 @@
 {% endif %}
 
   <div class="delete-account">
-     <a href="#" class="delete-link" onclick="confirmDelete()">
-       <i class="fas fa-trash-alt"></i> Supprimer mon compte
-     </a>
+    <form method="POST" action="{% url 'delete_user' %}" class="dropdown-form">
+       {% csrf_token %}
+       <button type="submit" class="delete-link"
+onclick="return confirm('Are you sure you want to delete your account ?')" 
+class="dropdown-item danger"><i class="fas fa-trash-alt"></i>
+    Delete account</button>
+    </form>
   </div>
     </main>
 

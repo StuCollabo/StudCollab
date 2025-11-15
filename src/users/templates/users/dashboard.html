@@ -28,13 +28,17 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <i class="fas fa-file-upload"></i>
-                <h3 id="uploadCount">0</h3>
-                <p>Fichiers téléversés</p>
+                <h3 id="uploadCount">{{count_docs}}</h3>
+              {% if count_docs <= 1 %}
+                <p>File</p>
+              {% else %}
+                <p>Files</p>
+              {% endif %}
             </div>
         </div>
 
         <div class="quick-actions">
-            <h2>Actions rapides</h2>
+            <h2>Quick actions</h2>
             <div class="actions-grid">
                 <a href="{% url 'user_docs' %}" class="action-btn">
                     <i class="fas fa-folder-open"></i>

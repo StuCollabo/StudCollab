@@ -7,4 +7,7 @@ urlpatterns = [
   path("<int:id>/", views.get_home_group,
     name="home_group"),
   path("", views.list_groups, name="list_groups"),
+  path("delete/<int:id>/", views.delete_group, name="delete_group"),
+
+
 ]

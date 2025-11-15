@@ -6,6 +6,21 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from collab.models import GroupDocument
+from .decorators import group_member_required
+
+@login_required
+def delete_group(request, id):
+  group = Group.objects.get(id=id)
+  is_creator = group.creator == request.user
+  if is_creator:
+    if request.method == "POST":
+      group.delete()
+      messages.success(request, "Group deleted successfully.")
+      return redirect("list_groups")
+  else:
+    messages.info(request, "You're not allowed to do this.")
+    return redirect("list_groups")
+
 
 @login_required
 def list_groups(request):
@@ -17,6 +32,7 @@ def list_groups(request):
   return render(request, "groups/list_groups.html", context)
 
 @login_required
+@group_member_required
 def get_home_group(request, id):
   group = get_object_or_404(Group, id=id)
   documents = GroupDocument.objects.filter(group=group)
@@ -61,5 +77,3 @@ def create_group(request):
       return redirect("home_group", id=group.id)
 
   return render(request, "groups/create_group.html", context)
-
-

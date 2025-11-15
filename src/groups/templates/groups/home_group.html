@@ -14,9 +14,24 @@
   <p>
     Your verification code is {{group.invit_code}}.
   </p>
+  {% if messages %}
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+  {% endif %}
+
 {% if documents %}
   {% for document in documents %}
-    <p>{{document.title}} - <a href="{{document.file.url}}">Download</a></p>
+  <div>
+    <p>{{document.title}} - <a href="{{document.file}}">Download</a> - 
+<form action="{% url 'delete_doc' document.id %}" method="POST" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit">
+    delete
+  </button>
+</form>
+</p>
+  </div>
   {% endfor %}
 {% else %}
   <h3>There's no documents available</h3>

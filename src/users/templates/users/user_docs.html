@@ -13,10 +13,18 @@
 <ul>
 {% if docs %}
   {% for doc in docs %}
+ <div>
   <li>
-    <p>{{doc.title}} - <a href="{{doc.file.url}}">Download</a> - <a href="#">Remove</a></p>
+    <p>{{doc.title}} - <a href="{{doc.file.url}}">Download</a> - <form action="{% url 'delete_doc' doc.id %}" method="POST" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit">
+    delete
+  </button>
+</form>
+</p>
     <p>in {{doc.group.name}} -  <a href="{% url 'home_group' doc.group.id %}">Enter</a>
   </li>
+ </div>
   {% endfor %}
 {% else %}
   <h3>You uploaded no documents</h3>
