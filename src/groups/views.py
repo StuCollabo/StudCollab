@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import JoinGroupForm, CreateGroupForm
+from .forms import JoinGroupForm, CreateGroupForm, RenameGroupForm
 from .models import Group
 import uuid
 from django.contrib import messages
@@ -7,6 +7,24 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from collab.models import GroupDocument
 from .decorators import group_member_required
+
+@login_required
+def rename_group(request, id):
+  group = Group.objects.get(id=id)
+  form = RenameGroupForm(instance=group)
+  old_name = Group.objects.get(id=id).name
+  context = {"old_name":old_name,
+    "form":form, "group":group}
+  if request.method == "POST":
+    form = RenameGroupForm(request.POST, instance=group)
+    if form.is_valid():
+      group = form.save()
+      messages.success(request,
+        f"Group {old_name} was successfully renamed to {group.name}.")
+      return redirect("list_groups")
+
+  return render(request, "groups/rename_group.html", context)
+
 
 @login_required
 def delete_group(request, id):

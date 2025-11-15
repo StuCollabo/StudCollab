@@ -1,0 +1,21 @@
+<!doctype>
+<html>
+<head>
+  <title>Renaming {{old_name}}</title>
+</head>
+
+<body>
+  <a href="{% url 'home' %}">Home</a>
+  <a href="{% url 'home_group' group.id %}">Group home</a>
+  <h1>Rename {{old_name}}</h1>
+  {% if messages %}
+    {% for message in messages %}
+      <p>{{message}}</p>
+    {% endfor %}
+  {% endif %}
+  <form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Rename</button>
+  </form>
+</body>

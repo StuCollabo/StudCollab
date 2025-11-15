@@ -16,14 +16,15 @@
   {% if groups %}
     {% for group in groups %}
       <li> <a href="{% url 'home_group' group.id %}">{{group.name}}</a>
-    {% if group.creator == request.user %}
+      {% if group.creator == request.user %}
       <form action="{% url 'delete_group' group.id %}" method="POST">
         {% csrf_token %}
          <button type="submit">
           delete
          </button>
       </form>
-    {% endif %}
+      <a href="{% url 'rename_group' group.id %}">Rename</a>
+      {% endif %}
 </li>
     {% endfor %}
   {% else %}

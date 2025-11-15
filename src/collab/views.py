@@ -1,10 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import Upload
+from .forms import Upload, AddTaskForm
 from .models import GroupDocument
 from groups.models import Group
 from groups.decorators import group_member_required, group_member_required_by_doc
+
+@login_required
+@group_member_required
+def add_task(resquest):
+  form = AddTaskForm()
+  group #ajouter
+  context = {"form":form}
+  if request.method == "POST"
+    form = AddTaskForm(request.POST)
+    if form.is_valid():
+      task = form.save(commit=False)
+      task.group = group
+  return render(request, "collab/add_task.html", context)
 
 @login_required
 @group_member_required

@@ -8,6 +8,7 @@ urlpatterns = [
     name="home_group"),
   path("", views.list_groups, name="list_groups"),
   path("delete/<int:id>/", views.delete_group, name="delete_group"),
+  path("rename/<int:id>/", views.rename_group, name="rename_group"),
 
 
 ]
