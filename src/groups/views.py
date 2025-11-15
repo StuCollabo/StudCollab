@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import JoinGroupForm, CreateGroupForm, RenameGroupForm
 from .models import Group
+from collab.models import Task
 import uuid
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from collab.models import GroupDocument
+from collab.models import GroupDocument, Task
 from .decorators import group_member_required
 
 @login_required
@@ -53,8 +54,13 @@ def list_groups(request):
 @group_member_required
 def get_home_group(request, id):
   group = get_object_or_404(Group, id=id)
+  tasks = Task.objects.filter(group=group)
+  total_tasks = tasks.count()
+  total_completed = tasks.filter(completed=True).count()
   documents = GroupDocument.objects.filter(group=group)
-  context = {"group":group, "documents":documents}
+  context = {"group":group, "documents":documents,
+    "tasks":tasks, "total_tasks":total_tasks,
+    "total_completed":total_completed}
   
   return render(request, "groups/home_group.html", context)
 

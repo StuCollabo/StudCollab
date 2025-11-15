@@ -1,60 +1,187 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Navigation Header -->
     <header class="header">
         <nav class="nav">
-            <div class="logo"><a href="{% url 'home' %}">StuCollab</a></div>
-            <div class="user-profile">
-                <form action="{% url 'logout' %}" method="POST" class="btn">
+            <div class="nav-left">
+                <div class="logo">
+                    <a href="{% url 'home' %}">StuCollab</a>
+                </div>
+            </div>
+            
+            <div class="nav-center">
+                <a href="{% url 'list_groups' %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>My Groups</span>
+                </a>
+                <a href="{% url 'notifs' %}" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <form action="{% url 'logout' %}" method="POST" class="logout-form">
                     {% csrf_token %}
-                    <button type="submit" class="btn"><i class="fas fa-sign-out-alt"></i>Logout</button>
+                    <button type="submit" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
                 </form>
             </div>
-            <a href="{% url 'list_groups' %}">My groups</a>
         </nav>
     </header>
 
+    <!-- Main Dashboard Content -->
     <main class="dashboard">
-        <div class="welcome-message">
-            <h1 id="welcomeTitle">{{dashboard_title}}</h1>
-        </div>
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">{{dashboard_title}}</h1>
+                    <p class="welcome-subtitle">Here's what's happening with your collaboration today</p>
+                </div>
+                <div class="welcome-illustration">
+                    <div class="illustration-circle"></div>
+                </div>
+            </section>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fas fa-file-upload"></i>
-                <h3 id="uploadCount">{{count_docs}}</h3>
-              {% if count_docs <= 1 %}
-                <p>File</p>
-              {% else %}
-                <p>Files</p>
-              {% endif %}
-            </div>
-        </div>
+            <!-- Stats Grid -->
+            <section class="stats-section">
+                <h2 class="section-title">Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">{{count_docs}}</h3>
+                            {% if count_docs <= 1 %}
+                            <p class="stat-label">File Uploaded</p>
+                            {% else %}
+                            <p class="stat-label">Files Uploaded</p>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <div class="quick-actions">
-            <h2>Quick actions</h2>
-            <div class="actions-grid">
-                <a href="{% url 'user_docs' %}" class="action-btn">
-                    <i class="fas fa-folder-open"></i>
-                    See my docs
-                </a>
-                <a href="{% url 'modify_profile' %}" class="action-btn">
-                    <i class="fas fa-user-edit"></i>
-                    Update my profile
-                </a>
-            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">-</h3>
+                            <p class="stat-label">Active Groups</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">-</h3>
+                            <p class="stat-label">Tasks Completed</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">-</h3>
+                            <p class="stat-label">Notifications</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions-section">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="actions-grid">
+                    <a href="{% url 'user_docs' %}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>My Documents</h3>
+                            <p>View and manage all your uploaded files</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'modify_profile' %}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Edit Profile</h3>
+                            <p>Update your personal information and settings</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'list_groups' %}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Manage Groups</h3>
+                            <p>Create, join, or manage your collaboration groups</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'notifs' %}" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>View Notifications</h3>
+                            <p>Check your latest updates and alerts</p>
+                        </div>
+                        <div class="action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Recent Activity Section (Optional) -->
+            <section class="recent-activity-section">
+                <h2 class="section-title">Recent Activity</h2>
+                <div class="activity-card">
+                    <div class="activity-empty">
+                        <i class="fas fa-history"></i>
+                        <p>No recent activity to display</p>
+                        <span>Start collaborating with your groups to see activity here</span>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 StuCollab. All rights reserved.</p>
+        <div class="container">
+            <p>&copy; 2025 StuCollab. All rights reserved.</p>
+        </div>
     </footer>
-
 </body>
 </html>

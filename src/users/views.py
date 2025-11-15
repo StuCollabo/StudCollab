@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SignUpForm, ModifyUserInfoForm, LowercaseAuthenticationForm
 from django.contrib.auth import authenticate, login, update_session_auth_hash, logout
 from django.contrib.auth.views import LoginView
@@ -6,9 +6,29 @@ from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-from collab.models import GroupDocument
+from collab.models import GroupDocument, Notification
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+
+@login_required
+def delete_notif(request, notif_id):
+  notif = get_object_or_404(Notification, id=notif_id)
+  if request.user == notif.user:
+    if request.method == "POST":
+      notif.delete()
+      messages.success(request, "Notification deleted successfully.")
+      return redirect("notifs")
+  else:
+    messages.warning(request, "You don't have the right to delete this ressource.")
+    return redirect("notifs")
+
+@login_required
+def show_notifs(request):
+  notifs = Notification.objects.filter(user=request.user).prefetch_related('triggered_by', 'task__group')
+  context = {"notifs":notifs}
+
+  return render(request, "users/notifications.html", context)
+
 
 @login_required
 def delete_user(request):

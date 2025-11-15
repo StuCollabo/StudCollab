@@ -1,123 +1,240 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User profile</title>
+    <title>Edit Profile - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/modify_user.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Navigation Header -->
     <header class="header">
         <nav class="nav">
-            <div class="logo"><a href="{% url 'home' %}">StuCollab</a></div>
-            <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>Dashboard</a>
-            <div class="user-profile">
-                <img src="https://ui-avatars.com/api/?name=User&background=e53935&color=fff" alt="Photo de profil" id="navAvatar">
-                <span id="navUsername">{{request.user.username}}</span>
-                <a href="{% url 'logout' %}" class="btn"><i class="fas fa-sign-out-alt"></i>Logout</a>
+            <div class="nav-left">
+                <div class="logo">
+                    <a href="{% url 'home' %}">StuCollab</a>
+                </div>
+            </div>
+            
+            <div class="nav-center">
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name={{request.user.username}}&background=00BCD4&color=fff" 
+                         alt="Profile picture" 
+                         class="user-avatar">
+                    <span class="username">{{request.user.username}}</span>
+                </div>
+                <a href="{% url 'logout' %}" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
             </div>
         </nav>
     </header>
 
+    <!-- Main Content -->
     <main class="profile-container">
-        <div class="profile-header">
-            <!--<div class="profile-avatar">
-                <img src="https://ui-avatars.com/api/?name=User&background=e53935&color=fff" alt="Photo de profil" id="profileAvatar">
-                <label class="avatar-upload" for="avatarInput">
-                    <i class="fas fa-camera"></i>
-                    <input type="file" id="avatarInput" style="display: none" accept="image/*">
-                </label>
-            </div>-->
-            <h1 class="profile-name" id="profileName">{{request.user.username}}</h1>
-            <p class="profile-email" id="profileEmail">{{request.user.email}}</p>
+        <div class="container">
+            
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{message}}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-header-content">
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar">
+                            <img src="https://ui-avatars.com/api/?name={{request.user.username}}&background=00BCD4&color=fff&size=120" 
+                                 alt="Profile picture">
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="profile-name">{{request.user.username}}</h1>
+                        <p class="profile-email">
+                            <i class="fas fa-envelope"></i>
+                            {{request.user.email}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Information Section -->
+            <section class="profile-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-edit"></i>
+                        Personal Information
+                    </h2>
+                    <p class="section-description">Update your account details and personal information</p>
+                </div>
+
+                <form method="POST" class="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="id_username">
+                                <i class="fas fa-user"></i>
+                                {{info_form.username.label}}
+                            </label>
+                            {{info_form.username}}
+                            {% if info_form.username.help_text %}
+                            <span class="help-text">{{info_form.username.help_text}}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label for="id_email">
+                                <i class="fas fa-envelope"></i>
+                                {{info_form.email.label}}
+                            </label>
+                            {{info_form.email}}
+                            {% if info_form.email.help_text %}
+                            <span class="help-text">{{info_form.email.help_text}}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if info_form.errors %}
+                    <div class="error-list">
+                        {% for field, errors in info_form.errors.items %}
+                            {% for error in errors %}
+                            <div class="error-item">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ error }}</span>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" name="submit_personal" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                </form>
+            </section>
+
+            <!-- Security Section -->
+            <section class="profile-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-lock"></i>
+                        Security
+                    </h2>
+                    <p class="section-description">Manage your password and security settings</p>
+                </div>
+
+                <form method="POST" class="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <div class="input-group full-width">
+                            <label for="id_old_password">
+                                <i class="fas fa-key"></i>
+                                {{password_form.old_password.label}}
+                            </label>
+                            {{password_form.old_password}}
+                            {% if password_form.old_password.help_text %}
+                            <span class="help-text">{{password_form.old_password.help_text}}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label for="id_new_password1">
+                                <i class="fas fa-lock"></i>
+                                {{password_form.new_password1.label}}
+                            </label>
+                            {{password_form.new_password1}}
+                            {% if password_form.new_password1.help_text %}
+                            <span class="help-text">{{password_form.new_password1.help_text}}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label for="id_new_password2">
+                                <i class="fas fa-check-circle"></i>
+                                {{password_form.new_password2.label}}
+                            </label>
+                            {{password_form.new_password2}}
+                            {% if password_form.new_password2.help_text %}
+                            <span class="help-text">{{password_form.new_password2.help_text}}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if password_form.errors %}
+                    <div class="error-list">
+                        {% for field, errors in password_form.errors.items %}
+                            {% for error in errors %}
+                            <div class="error-item">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ error }}</span>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" name="submit_password" class="btn-save">
+                        <i class="fas fa-key"></i>
+                        Update Password
+                    </button>
+                </form>
+            </section>
+
+            <!-- Danger Zone -->
+            <section class="profile-section danger-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Danger Zone
+                    </h2>
+                    <p class="section-description">Permanent actions that cannot be undone</p>
+                </div>
+
+                <div class="danger-zone-content">
+                    <div class="danger-info">
+                        <h3>Delete Account</h3>
+                        <p>Once you delete your account, there is no going back. All your data will be permanently removed.</p>
+                    </div>
+                    <form method="POST" action="{% url 'delete_user' %}" class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="btn-delete" 
+                                onclick="return confirm('⚠️ Are you absolutely sure you want to delete your account? This action cannot be undone!')">
+                            <i class="fas fa-trash-alt"></i>
+                            Delete Account
+                        </button>
+                    </form>
+                </div>
+            </section>
+
         </div>
-
-
-
-
-        <section class="profile-section">
-            <h2 class="section-title"><i class="fas fa-user-edit"></i>Personal informations</h2>
-            <form id="personalInfoForm" method="POST">
-              {% csrf_token %}
-                <div class="input-group">
-                    <label for="fullName">{{info_form.username.label_tag}}</label>
-                    <!--<input type="text" id="fullName" name="fullName" required>-->
-                    {{info_form.username}}
-                </div>
-                <div class="input-group">
-                    <label for="email">{{info_form.email.label_tag}}</label>
-                    <!--<input type="email" id="email" name="email" required>-->
-                    {{info_form.email}}
-                </div>
-                <button type="submit" class="save-btn" name="submit_personal">
-                    <i class="fas fa-save"></i>
-                    Save modifications
-                </button>
-{% if info_form.errors %}
-  <ul>
-  {% for field, errors in info_form.errors.items %}
-    {% for error in errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-  {% endfor %}
-  </ul>
-{% endif %}
-            </form>
-        </section>
-
-
-        <section class="profile-section">
-  {% if messages %}
-   {% for message in messages %}
-     {{message}}
-   {% endfor %}
-  {% endif %}
-            <h2 class="section-title"><i class="fas fa-lock"></i>Security</h2>
-            <form id="securityForm" method="POST">
-              {% csrf_token %}
-                <div class="input-group">
-                    <label for="currentPassword">{{password_form.old_password.label_tag}}</label>
-                    <!--<input type="password" id="currentPassword" name="currentPassword" required>-->
-                    {{password_form.old_password}}
-                </div>
-                <div class="input-group">
-                    <label for="newPassword">{{password_form.new_password1.label_tag}}</label>
-<!--                    <input type="password" id="newPassword" name="newPassword" required>-->
-                        {{password_form.new_password1}}
-                </div>
-                <div class="input-group">
-                    <label for="confirmPassword">{{password_form.new_password2.label_tag}}</label>
-<!--                    <input type="password" id="confirmPassword" name="confirmPassword" required>-->
-                        {{password_form.new_password2}}
-                </div>
-                <button type="submit" class="save-btn" name="submit_password">
-                    <i class="fas fa-key"></i>
-                    Update password
-                </button>
-            </form>
-{% if password_form.errors %}
-  <ul>
-  {% for field, errors in password_form.errors.items %}
-    {% for error in errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-  {% endfor %}
-  </ul>
-{% endif %}
-
-  <div class="delete-account">
-    <form method="POST" action="{% url 'delete_user' %}" class="dropdown-form">
-       {% csrf_token %}
-       <button type="submit" class="delete-link"
-onclick="return confirm('Are you sure you want to delete your account ?')" 
-class="dropdown-item danger"><i class="fas fa-trash-alt"></i>
-    Delete account</button>
-    </form>
-  </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 StudCollab. All rights reserved.</p>
+        <div class="container">
+            <p>&copy; 2025 StuCollab. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>

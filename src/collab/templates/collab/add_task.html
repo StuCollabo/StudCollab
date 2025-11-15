@@ -1,0 +1,24 @@
+<!doctype>
+<html>
+<head>
+  <title>{{group.name}} - Add Task</title>
+</head>
+<body>
+  <h1>{{group.name}} - Add Task</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Add</button>
+  </form>
+  {% if messages %}
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+  {% endif %}
+  {% if form.errors %}
+    {% for error in form.errors %}
+      {{error}}
+    {% endfor %}
+  {% endif %}
+</body>
+</html>

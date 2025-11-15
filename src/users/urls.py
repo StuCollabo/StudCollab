@@ -8,6 +8,9 @@ urlpatterns = [
   path("my-docs/", views.get_user_docs, name="user_docs"),
   path("delete-account/", views.delete_user,
     name="delete_user"),
+  path("notifs/", views.show_notifs, name="notifs"),
+  path("notifs/delete/<int:notif_id>/",
+    views.delete_notif, name="delete_notif"),
 
 ]
 

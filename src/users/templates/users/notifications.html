@@ -1,0 +1,33 @@
+<!doctype>
+<html>
+<head>
+  <title>{{request.user.username}} - Notifications</title>
+</head>
+
+<body>
+<nav>
+  <a href="{% url 'home' %}">Home</a>
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+</nav>
+  <h1>{{request.user.username}} - Notifications</h1>
+ <ul>
+{% if notifs %}
+  {% for notif in notifs %}
+    <li>
+      {% for user in notif.triggered_by.all %}
+        {{ user.username }}{% if not forloop.last %}, {% endif %}
+      {% endfor %} 
+      remind you to do the task "{{ notif.task.title }}" in group 
+      <a href="{% url 'home_group' notif.task.group.id %}">{{ notif.task.group.name }}</a> 
+      <form method="POST" action="{% url 'delete_notif' notif.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <h3>You do not have notifications</h3>
+{% endif %}  
+</body>
+</html>

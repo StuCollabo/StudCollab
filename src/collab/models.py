@@ -19,6 +19,8 @@ class Task(models.Model):
   completed = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True)
 
+  def __str__(self):
+    return f"{self.title} - {self.assigned_to.username}"
 
 
 class BaseDocument(models.Model):
@@ -59,3 +61,14 @@ class GroupDocument(BaseDocument):
     if not self.group:
       raise ValidationError("This document should be assigned to a group.")
 """
+
+
+class Notification(models.Model):
+  task = models.ForeignKey(Task, on_delete=models.CASCADE)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications_received")
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  triggered_by = models.ManyToManyField(User, related_name="notifications_triggered")
+
+  def __str__(self):
+    return self.task.title

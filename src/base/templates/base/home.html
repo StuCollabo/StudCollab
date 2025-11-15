@@ -1,29 +1,166 @@
-{% extends 'base/body.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StuCollab - Collaborate, Share, Advance</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>StuCollab</h2>
+            </div>
+            <div class="nav-links">
+                <a href="#">Accueil</a>
+                <a href="#">Fonctionnalités</a>
+                <a href="#">Universités</a>
+                <a href="#">Support</a>
+            </div>
+            <div class="nav-actions">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-secondary">Dashboard</a>
+                    <a href="{% url 'list_groups' %}" class="btn-primary">Mes Groupes</a>
+                {% else %}
+                    <a href="{% url 'signin_signup' %}" class="btn-secondary">Se connecter</a>
+                    <a href="{% url 'signin_signup' %}" class="btn-primary">Créer un compte</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
 
-{% block content %}
-{% if request.user.is_authenticated %}
-<div>
-  <a href="{% url 'dashboard' %}">Dashboard</a>
-  <a href="{% url 'list_groups' %}">My Groups</a>
-</div>
-{% endif %}
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-<h1>Welcome on StuCollab</h1>
-{% if messages %}
-  {% for message in messages %}
-    <p style="background:green;">{{message}}</p>
-  {% endfor %}
-{% endif %}
-<p>Mathieu MATONGO is a young student in CS major. While receiving his group's work, 
-he noticed people are use to make a group with people whose homes are near to others.
-So Mathieu thought about a platform where Student and maybe other type of people
-can collaborate, sending some documents or assigning tasks or even work together in real-time on the same document. 
-</p>
-{% if not request.user.is_authenticated %}
-<p>Feel free to <a href="{% url 'signin_signup' %}">create an account</a> or
-<a href="{% url 'signin_signup' %}">login</a> in order to have access to our product. </p>
-{% endif %}
-<p>For now, we have a total of {{count_users}} users.</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Collabore, partage, avance.</h1>
+                    <p class="hero-description">
+                        Plateforme où les étudiants créent des groupes, partagent des documents, travaillent en équipe.
+                    </p>
+                    <div class="hero-buttons">
+                        {% if not request.user.is_authenticated %}
+                            <a href="{% url 'signin_signup' %}" class="btn-primary btn-large">Essayer gratuitement</a>
+                            <a href="#about" class="btn-secondary btn-large">Voir la démo</a>
+                        {% else %}
+                            <a href="{% url 'dashboard' %}" class="btn-primary btn-large">Accéder au Dashboard</a>
+                            <a href="{% url 'list_groups' %}" class="btn-secondary btn-large">Mes Groupes</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="mockup-container">
+                        <div class="mockup-window">
+                            <div class="mockup-sidebar"></div>
+                            <div class="mockup-content">
+                                <div class="mockup-header"></div>
+                                <div class="mockup-line"></div>
+                                <div class="mockup-line short"></div>
+                                <div class="mockup-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<p>No worry about the UI, I'll make it better soon.</p>
-{% endblock %}
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Fonctionnalités clés</h3>
+                    <p>Créez des groupes, partagez des documents et collaborez en temps réel</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                            <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                        </svg>
+                    </div>
+                    <h3>Collaboration entre écoles / facultés</h3>
+                    <p>Connectez-vous avec des étudiants de différentes institutions</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3>Sécurité et stockage intelligent</h3>
+                    <p>Vos données sont protégées et accessibles partout</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>L'histoire de StuCollab</h2>
+            <div class="about-content">
+                <p>
+                    Mathieu MATONGO est un jeune étudiant en informatique. En recevant le travail de son groupe, 
+                    il a remarqué que les gens ont l'habitude de former des groupes avec des personnes dont les maisons 
+                    sont proches les unes des autres.
+                </p>
+                <p>
+                    Mathieu a donc pensé à une plateforme où les étudiants et peut-être d'autres types de personnes 
+                    peuvent collaborer, envoyer des documents, attribuer des tâches ou même travailler ensemble 
+                    en temps réel sur le même document.
+                </p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">{{count_users}}</div>
+                        <div class="stat-label">Utilisateurs actifs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    {% if not request.user.is_authenticated %}
+    <section class="cta">
+        <div class="container">
+            <h2>Prêt à commencer ?</h2>
+            <p>Rejoignez notre communauté d'étudiants collaboratifs</p>
+            <div class="cta-buttons">
+                <a href="{% url 'signin_signup' %}" class="btn-primary btn-large">Créer un compte</a>
+                <a href="{% url 'signin_signup' %}" class="btn-secondary btn-large">Se connecter</a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 StuCollab. Conçu avec ❤️ par Mathieu MATONGO</p>
+        </div>
+    </footer>
+</body>
+</html>

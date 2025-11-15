@@ -5,6 +5,7 @@
 </head>
 
 <body>
+  <a href="{% url 'home' %}">Home</a>
   <h1>{{group.name}}</h1>
   <!--<form method="POST">
     {% csrf_token %}
@@ -19,6 +20,26 @@
       {{message}}
     {% endfor %}
   {% endif %}
+  <div>
+    {% if tasks %}
+     <p>{{ total_completed }} / {{ total_tasks }} tasks completed. 
+      <a href="{% url 'undone_tasks' group.id %}">See undone tasks</a>
+     </p>
+      {% for task in tasks %}
+        <p>
+          <form action="{% url 'toggle_task' task.id %}" method="POST">
+            {% csrf_token %}
+              <input type="checkbox" name="completed" {% if request.user != task.assigned_to %}disabled{% endif %}  onchange="this.form.submit()"
+                 {% if task.completed %}checked{% endif %}>
+          </form>
+         {{task.title}} assigned to {{task.assigned_to.username}}.
+        </p>
+      {% endfor %}
+    {% else %}
+      <h5>No tasks assigned for the moment</h5>  
+    {% endif %}
+  <a href="{% url 'add_task' group.id %}">Add a task to this group</a>
+  </div>
 
 {% if documents %}
   {% for document in documents %}

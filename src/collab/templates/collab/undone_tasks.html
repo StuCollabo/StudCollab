@@ -1,0 +1,29 @@
+<!doctype>
+<html>
+<head>
+  <title>{{group.name}} - Undone Tasks</title>
+</head>
+<body>
+  <a href="{% url 'home_group' group.id %}">Home</a>
+  <h1>{{group.name}} - Undone tasks</h1>
+  {% if messages %}
+    {% for m in messages %}
+      {{m}}
+    {% endfor %}
+  {% endif %}
+  <ul>
+    {% if tasks %}
+      {% for task in tasks %}
+      <li>
+        <p>{{task.title}} assigned to {{task.assigned_to.username}}. 
+          <form action="{% url 'wake_them' task.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Wake them</button>
+          </form>
+        </p>
+      </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+</body>
+</html>
