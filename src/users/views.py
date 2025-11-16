@@ -120,6 +120,8 @@ def signin_signup(request):
           for error in errors['email']:
             if error.code == 'unique':
               messages.warning(request, "This email is already registered.")
+        if 'password2' in signup_form.errors:
+          messages.error(request, "The passwords don't match or don't meet the requirements.")
 
     elif "signin_submit" in request.POST:
       signin_form = LowercaseAuthenticationForm(request, data=request.POST)
