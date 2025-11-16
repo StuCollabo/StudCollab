@@ -95,7 +95,7 @@ def signin_signup(request):
     messages.info(request, "You're already authenticated")
     return redirect("home")
 
-  signin_form = AuthenticationForm()
+  signin_form = LowercaseAuthenticationForm()
   signup_form = SignUpForm()
   context = {"signin_form":signin_form,
     "signup_form":signup_form}
