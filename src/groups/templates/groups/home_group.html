@@ -1,62 +1,193 @@
-<!doctype>
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>{{group.name}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ group.name }} - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/home_group.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-  <a href="{% url 'home' %}">Home</a>
-  <h1>{{group.name}}</h1>
-  <!--<form method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Create</button>
-  </form>-->
-  <p>
-    Your verification code is {{group.invit_code}}.
-  </p>
-  {% if messages %}
-    {% for message in messages %}
-      {{message}}
-    {% endfor %}
-  {% endif %}
-  <div>
-    {% if tasks %}
-     <p>{{ total_completed }} / {{ total_tasks }} tasks completed. 
-      <a href="{% url 'undone_tasks' group.id %}">See undone tasks</a>
-     </p>
-      {% for task in tasks %}
-        <p>
-          <form action="{% url 'toggle_task' task.id %}" method="POST">
-            {% csrf_token %}
-              <input type="checkbox" name="completed" {% if request.user != task.assigned_to %}disabled{% endif %}  onchange="this.form.submit()"
-                 {% if task.completed %}checked{% endif %}>
-          </form>
-         {{task.title}} assigned to {{task.assigned_to.username}}.
-        </p>
-      {% endfor %}
-    {% else %}
-      <h5>No tasks assigned for the moment</h5>  
-    {% endif %}
-  <a href="{% url 'add_task' group.id %}">Add a task to this group</a>
-  </div>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-users-between-lines"></i>
+                <span>StuCollab</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'list_groups' %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>My Groups</span>
+                </a>
+            </div>
+        </nav>
+    </header>
 
-{% if documents %}
-  {% for document in documents %}
-  <div>
-    <p>{{document.title}} - <a href="{{document.file}}">Download</a> - 
-<form action="{% url 'delete_doc' document.id %}" method="POST" style="display:inline;">
-  {% csrf_token %}
-  <button type="submit">
-    delete
-  </button>
-</form>
-</p>
-  </div>
-  {% endfor %}
-{% else %}
-  <h3>There's no documents available</h3>
-{% endif %}
-  <p>Upload <a href="{% url 'upload' group.id %}">here</a>
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">{{ group.name }}</h1>
+                    <div class="invite-code">
+                        <i class="fas fa-key"></i>
+                        <span>Invite Code: <strong>{{ group.invit_code }}</strong></span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a href="{% url 'add_task' group.id %}" class="btn-action primary">
+                        <i class="fas fa-plus"></i>
+                        Add Task
+                    </a>
+                    <a href="{% url 'upload' group.id %}" class="btn-action secondary">
+                        <i class="fas fa-upload"></i>
+                        Upload
+                    </a>
+                </div>
+            </section>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert">
+                            <i class="fas fa-info-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Tasks Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-tasks"></i>
+                        Tasks
+                    </h2>
+                    {% if tasks %}
+                        <div class="progress-info">
+                            <span class="progress-text">{{ total_completed }} / {{ total_tasks }} completed</span>
+                            <a href="{% url 'undone_tasks' group.id %}" class="link-small">
+                                <i class="fas fa-list"></i>
+                                View Undone
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if tasks %}
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {% widthratio total_completed total_tasks 100 %}%"></div>
+                    </div>
+
+                    <div class="tasks-list">
+                        {% for task in tasks %}
+                        <div class="task-item {% if task.completed %}completed{% endif %}">
+                            <form action="{% url 'toggle_task' task.id %}" method="POST" class="task-checkbox">
+                                {% csrf_token %}
+                                <label class="checkbox-wrapper">
+                                    <input type="checkbox" 
+                                           name="completed" 
+                                           {% if request.user != task.assigned_to %}disabled{% endif %}
+                                           onchange="this.form.submit()"
+                                           {% if task.completed %}checked{% endif %}>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </form>
+                            <div class="task-content">
+                                <h3 class="task-title">{{ task.title }}</h3>
+                                <p class="task-assigned">
+                                    <i class="fas fa-user"></i>
+                                    {{ task.assigned_to.username }}
+                                </p>
+                            </div>
+                            {% if task.completed %}
+                                <span class="badge-done">
+                                    <i class="fas fa-check"></i>
+                                    Done
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state small">
+                        <i class="fas fa-tasks"></i>
+                        <p>No tasks assigned for the moment</p>
+                        <a href="{% url 'add_task' group.id %}" class="btn-small">
+                            <i class="fas fa-plus"></i>
+                            Add First Task
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <!-- Documents Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-folder"></i>
+                        Documents
+                    </h2>
+                    <a href="{% url 'upload' group.id %}" class="btn-icon-text">
+                        <i class="fas fa-plus-circle"></i>
+                        Upload
+                    </a>
+                </div>
+
+                {% if documents %}
+                    <div class="docs-grid">
+                        {% for document in documents %}
+                        <div class="doc-card">
+                            <div class="doc-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-info">
+                                <h3 class="doc-title">{{ document.title }}</h3>
+                            </div>
+                            <div class="doc-actions">
+                                <a href="{{ document.file.url }}" class="btn-icon" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <form action="{% url 'delete_doc' document.id %}" method="POST" class="delete-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-icon btn-delete" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state small">
+                        <i class="fas fa-folder-open"></i>
+                        <p>There's no documents available</p>
+                        <a href="{% url 'upload' group.id %}" class="btn-small">
+                            <i class="fas fa-upload"></i>
+                            Upload Document
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 StuCollab. All rights reserved.</p>
+    </footer>
 </body>
 </html>

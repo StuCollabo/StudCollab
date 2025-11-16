@@ -1,24 +1,163 @@
-<!doctype>
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>{{group.name}} - Add Task</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ group.name }} - Add Task - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/add_task.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <h1>{{group.name}} - Add Task</h1>
-  <form method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Add</button>
-  </form>
-  {% if messages %}
-    {% for message in messages %}
-      {{message}}
-    {% endfor %}
-  {% endif %}
-  {% if form.errors %}
-    {% for error in form.errors %}
-      {{error}}
-    {% endfor %}
-  {% endif %}
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-users-between-lines"></i>
+                <span>StuCollab</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'home_group' group.id %}" class="nav-link">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Group</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Add New Task</h1>
+                    <p class="hero-subtitle">{{ group.name }}</p>
+                </div>
+                <div class="hero-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+            </section>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert">
+                            <i class="fas fa-info-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Form Errors -->
+            {% if form.errors %}
+                <div class="messages">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="alert error">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ error }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Form Section -->
+            <section class="form-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <div class="form-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h2>Create Task</h2>
+                        <p>Assign a new task to a team member</p>
+                    </div>
+
+                    <form method="POST" class="task-form">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="required">*</span>
+                                    {% endif %}
+                                </label>
+                                <div class="input-wrapper">
+                                    {% if field.name == 'title' %}
+                                        <i class="fas fa-heading input-icon"></i>
+                                    {% elif field.name == 'description' %}
+                                        <i class="fas fa-align-left input-icon"></i>
+                                    {% elif field.name == 'assigned_to' %}
+                                        <i class="fas fa-user-check input-icon"></i>
+                                    {% elif field.name == 'due_date' %}
+                                        <i class="fas fa-calendar-alt input-icon"></i>
+                                    {% else %}
+                                        <i class="fas fa-pen input-icon"></i>
+                                    {% endif %}
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                    <small class="help-text">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="field-error">
+                                        {% for error in field.errors %}
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="form-actions">
+                            <a href="{% url 'home_group' group.id %}" class="btn-cancel">
+                                <i class="fas fa-times"></i>
+                                <span>Cancel</span>
+                            </a>
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-check"></i>
+                                <span>Add Task</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tips Card -->
+                <div class="tips-card">
+                    <div class="tips-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="tips-content">
+                        <h3>Task Tips</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Keep task titles clear and concise</li>
+                            <li><i class="fas fa-check"></i> Add details in the description</li>
+                            <li><i class="fas fa-check"></i> Assign to the right team member</li>
+                            <li><i class="fas fa-check"></i> Set realistic deadlines</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 StuCollab. All rights reserved.</p>
+    </footer>
 </body>
 </html>

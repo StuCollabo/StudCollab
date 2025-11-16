@@ -1,122 +1,121 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Signup</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>StuCollab - Login & Signup</title>
+    <link rel="stylesheet" href="{% static 'css/signin_signup.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-
 <body>
-    <div class="background-pattern"></div>
-    <header>
-      <a href="{% url 'home' %}">
-        <div class="logo">      
-              <i class="fas fa-archive">
-              </i>
+    <div class="background"></div>
+    
+    <header class="header">
+        <a href="{% url 'home' %}" class="logo">
+            <i class="fas fa-users-between-lines"></i>
             StuCollab
-        </div>
-      </a>
+        </a>
     </header>
+
     <div class="container">
-        <div class="form-box">
-            <h1>Bienvenue</h1>
-            <div class="tab">
-                <button id="loginTab" class="active" onclick="showForm('login')">Connexion</button>
-                <button id="registerTab" onclick="showForm('register')">Inscription</button>
+        <!-- Left Side -->
+        <div class="info-side">
+            <h2>Collaborate, share, advance.</h2>
+            <p>Platform where students create groups, share documents, and work as a team.</p>
+            <div class="features">
+                <div><i class="fas fa-check-circle"></i> Key Features</div>
+                <div><i class="fas fa-graduation-cap"></i> School Collaboration</div>
+                <div><i class="fas fa-shield-alt"></i> Secure & Intelligent</div>
             </div>
+        </div>
 
-
-<!--Login Form -->
-    {% if messages %}
-      {% for message in messages %}
-        {{message}}
-      {% endfor %}
-    {% endif %}
-
-    {% if signin_form.errors %}
-      {% for field, errors in signin_form.errors.items %}
-        {% for error in errors %}
-          <div class="error">{{ error }}</div>
-        {% endfor %}
-      {% endfor %}
-    {% endif %}
-
-            <form id="loginForm" class="form active" method="POST">
-              {% csrf_token %}
-                <div class="input-group">
-                    <label for="loginEmail">{{signin_form.username.label_tag}}</label>
-                    <i class="fas fa-envelope"></i>
-                       {{signin_form.username}}
+        <!-- Right Side - Forms -->
+        <div class="form-side">
+            <div class="form-box">
+                <h1 id="formTitle">Welcome Back</h1>
+                
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button id="loginTab" class="active" onclick="showForm('login')">Sign In</button>
+                    <button id="registerTab" onclick="showForm('register')">Sign Up</button>
                 </div>
-                <div class="input-group">
-                    <label for="loginPassword">{{signin_form.password.label_tag}}</label>
-                    <i class="fas fa-lock"></i>
-                   {{signin_form.password}}
-                </div>
-                <button type="submit" name="signin_submit">Se connecter</button>
-                <div class="form-footer">
-                    <a href="#">Forgotten password?</a>
-                </div>
-                <div class="social-login">
-                    <p>Or login with</p>
-                    <div class="social-buttons">
-                        <button type="button" class="social-button">
-                            <i class="fab fa-google"></i>
-                            Google
-                        </button>
-                        <button type="button" class="social-button">
-                            <i class="fab fa-facebook"></i>
-                            Facebook
-                        </button>
+
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Login Form -->
+                <form id="loginForm" class="form active" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        {{ signin_form.username }}
                     </div>
-                </div>
-            </form>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        {{ signin_form.password }}
+                    </div>
+                    <a href="#" class="forgot">Forgot password?</a>
+                    <button type="submit" name="signin_submit">Sign In</button>
+                </form>
 
-
-            <form id="registerForm" class="form" method="POST">
-              {% csrf_token %}
-                <div class="input-group">
-                    <label for="registerName">{{signup_form.username.label_tag}}</label>
-                    <i class="fas fa-user"></i>
-                      {{signup_form.username}}
-                </div>
-                <div class="input-group">
-                    <label for="registerEmail">{{signup_form.email.label_tag}}</label>
-                    <i class="fas fa-envelope"></i>
-                      {{signup_form.email}}
-                </div>
-                <div class="input-group">
-                    <label for="registerPassword">{{signup_form.password1.label_tag}}</label>
-                    <i class="fas fa-lock"></i>
-                      {{signup_form.password1}}
-                </div>
-                <div class="input-group">
-                    <label for="registerPassword">{{signup_form.password2.label_tag}}</label>
-                    <i class="fas fa-lock"></i>
-                      {{signup_form.password2}}
-                </div>
-                <button type="submit" name="signup_submit">S'inscrire</button>
-            </form>
+                <!-- Register Form -->
+                <form id="registerForm" class="form" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        {{ signup_form.username }}
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        {{ signup_form.email }}
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        {{ signup_form.password1 }}
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        {{ signup_form.password2 }}
+                    </div>
+                    <button type="submit" name="signup_submit">Sign Up</button>
+                </form>
+            </div>
+            
+            <button class="btn-trial" onclick="showForm('register')">
+                <i class="fas fa-rocket"></i> Try for Free
+            </button>
         </div>
     </div>
+
     <script>
         function showForm(form) {
-            document.getElementById('loginForm').classList.remove('active');
-            document.getElementById('registerForm').classList.remove('active');
-            document.getElementById('loginTab').classList.remove('active');
-            document.getElementById('registerTab').classList.remove('active');
-            
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const title = document.getElementById('formTitle');
+
+            loginForm.classList.remove('active');
+            registerForm.classList.remove('active');
+            loginTab.classList.remove('active');
+            registerTab.classList.remove('active');
+
             if(form === 'login') {
-                document.getElementById('loginForm').classList.add('active');
-                document.getElementById('loginTab').classList.add('active');
+                loginForm.classList.add('active');
+                loginTab.classList.add('active');
+                title.textContent = 'Welcome Back';
             } else {
-                document.getElementById('registerForm').classList.add('active');
-                document.getElementById('registerTab').classList.add('active');
+                registerForm.classList.add('active');
+                registerTab.classList.add('active');
+                title.textContent = 'Create Account';
             }
         }
-
     </script>
 </body>
 </html>

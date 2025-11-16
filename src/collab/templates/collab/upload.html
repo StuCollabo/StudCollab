@@ -1,24 +1,266 @@
-<!doctype>
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>{{group.name}} - upload</title>
-</head>                                     
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{group.name}} - Upload Document | StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/upload.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 <body>
-  <h1>{{group.name}} - upload</h1>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Upload</button>
-  </form>
-  {% if messages %}
-    {% for message in messages %}
-      {{message}}
-    {% endfor %}
-  {% endif %}
-  {% if form.errors %}
-    {% for error in form.errors %}
-      {{error}}
-    {% endfor %}
-  {% endif %}
+    <!-- Navigation Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-left">
+                <div class="logo">
+                    <a href="{% url 'home' %}">StuCollab</a>
+                </div>
+            </div>
+            
+            <div class="nav-center">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'home_group' group.id %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Group Home</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name={{request.user.username}}&background=00BCD4&color=fff" 
+                         alt="Profile" 
+                         class="user-avatar">
+                    <span class="username">{{request.user.username}}</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="upload-container">
+        <div class="container">
+            
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="{% url 'home_group' group.id %}">{{group.name}}</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Upload Document</span>
+            </nav>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{message}}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Form Errors -->
+            {% if form.errors %}
+            <div class="messages-container">
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="error-content">
+                        <strong>Please fix the following errors:</strong>
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1 class="page-title">Upload Document</h1>
+                        <p class="page-subtitle">Share files with {{group.name}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <section class="upload-section">
+                <div class="upload-card">
+                    <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                        {% csrf_token %}
+                        
+                        <div class="form-content">
+                            <!-- File Upload Area -->
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-icon">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <h3>Drag & Drop your file here</h3>
+                                <p>or click to browse</p>
+                                <div class="file-input-wrapper">
+                                    {{form.document}}
+                                </div>
+                                <div class="file-info" id="fileInfo"></div>
+                            </div>
+
+                            <!-- Form Fields -->
+                            <div class="form-fields">
+                                {% for field in form %}
+                                    {% if field.name != 'document' %}
+                                    <div class="input-group">
+                                        <label for="{{field.id_for_label}}">
+                                            {% if field.name == 'title' %}
+                                                <i class="fas fa-heading"></i>
+                                            {% elif field.name == 'description' %}
+                                                <i class="fas fa-align-left"></i>
+                                            {% else %}
+                                                <i class="fas fa-tag"></i>
+                                            {% endif %}
+                                            {{field.label}}
+                                            {% if field.field.required %}
+                                                <span class="required">*</span>
+                                            {% endif %}
+                                        </label>
+                                        {{field}}
+                                        {% if field.help_text %}
+                                        <span class="help-text">{{field.help_text}}</span>
+                                        {% endif %}
+                                        {% if field.errors %}
+                                        <span class="field-error">{{field.errors.0}}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="form-actions">
+                                <a href="{% url 'home_group' group.id %}" class="btn-secondary">
+                                    <i class="fas fa-times"></i>
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Upload Document
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="info-cards">
+                    <div class="info-card">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="info-content">
+                            <h3>Supported Formats</h3>
+                            <p>You can upload documents in PDF, DOCX, XLSX, PPTX, TXT, and image formats (PNG, JPG, etc.)</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="info-content">
+                            <h3>File Security</h3>
+                            <p>Your files are encrypted and only accessible to members of this group.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <i class="fas fa-users"></i>
+                        <div class="info-content">
+                            <h3>Collaboration</h3>
+                            <p>All group members will be notified when you upload a new document.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 StuCollab. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // File upload drag and drop functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.querySelector('input[type="file"]');
+        const fileInfo = document.getElementById('fileInfo');
+
+        if (fileInput) {
+            // Click to upload
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('drag-over');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('drag-over');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    displayFileInfo(files[0]);
+                }
+            });
+
+            // File selection
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    displayFileInfo(e.target.files[0]);
+                }
+            });
+
+            function displayFileInfo(file) {
+                const size = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.innerHTML = `
+                    <div class="selected-file">
+                        <i class="fas fa-file"></i>
+                        <div class="file-details">
+                            <strong>${file.name}</strong>
+                            <span>${size} MB</span>
+                        </div>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>

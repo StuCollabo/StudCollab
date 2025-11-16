@@ -1,33 +1,151 @@
-<!doctype>
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>{{request.user.username}} - Notifications</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{request.user.username}} - Notifications</title>
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-<nav>
-  <a href="{% url 'home' %}">Home</a>
-  <a href="{% url 'dashboard' %}">Dashboard</a>
-</nav>
-  <h1>{{request.user.username}} - Notifications</h1>
- <ul>
-{% if notifs %}
-  {% for notif in notifs %}
-    <li>
-      {% for user in notif.triggered_by.all %}
-        {{ user.username }}{% if not forloop.last %}, {% endif %}
-      {% endfor %} 
-      remind you to do the task "{{ notif.task.title }}" in group 
-      <a href="{% url 'home_group' notif.task.group.id %}">{{ notif.task.group.name }}</a> 
-      <form method="POST" action="{% url 'delete_notif' notif.id %}">
-        {% csrf_token %}
-        <button type="submit">Delete</button>
-      </form>
-    </li>
-  {% endfor %}
-</ul>
-{% else %}
-  <h3>You do not have notifications</h3>
-{% endif %}  
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-left">
+                <div class="logo">
+                    <a href="{% url 'home' %}">StuCollab</a>
+                </div>
+            </div>
+            <div class="nav-center">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'notifs' %}" class="nav-link active">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <form method="POST" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="notifications-page">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Your Notifications</h1>
+                    <p class="hero-subtitle">Stay updated with your team's activities</p>
+                </div>
+                <div class="hero-illustration">
+                    <div class="illustration-bell">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section class="notifications-section">
+                {% if notifs %}
+                    <div class="notifications-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-inbox"></i>
+                            Recent Notifications
+                        </h2>
+                        <span class="notif-count">{{ notifs|length }} notification{{ notifs|length|pluralize }}</span>
+                    </div>
+
+                    <div class="notifications-list">
+                        {% for notif in notifs %}
+                        <div class="notification-card">
+                            <div class="notif-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div class="notif-content">
+                                <div class="notif-users">
+                                    {% for user in notif.triggered_by.all %}
+                                        <span class="user-badge">{{ user.username }}</span>{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <p class="notif-message">
+                                    reminded you to do the task <strong>"{{ notif.task.title }}"</strong> in group
+                                    <a href="{% url 'home_group' notif.task.group.id %}" class="group-link">
+                                        {{ notif.task.group.name }}
+                                    </a>
+                                </p>
+                            </div>
+                            <form method="POST" action="{% url 'delete_notif' notif.id %}" class="notif-action">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete" title="Dismiss notification">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-bell-slash"></i>
+                        </div>
+                        <h3 class="empty-title">No notifications yet</h3>
+                        <p class="empty-text">You're all caught up! Check back later for updates.</p>
+                        <a href="{% url 'dashboard' %}" class="btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Dashboard
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <!-- Features Section -->
+            <section class="features-section">
+                <h2 class="section-title">Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Smart Notifications</h3>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>School Collaboration</h3>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Secure & Intelligent</h3>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 StuCollab. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

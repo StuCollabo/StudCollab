@@ -1,29 +1,170 @@
-<!doctype>
-<html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>{{group.name}} - Undone Tasks</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{group.name}} - Undone Tasks | StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/undone_tasks.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <a href="{% url 'home_group' group.id %}">Home</a>
-  <h1>{{group.name}} - Undone tasks</h1>
-  {% if messages %}
-    {% for m in messages %}
-      {{m}}
-    {% endfor %}
-  {% endif %}
-  <ul>
-    {% if tasks %}
-      {% for task in tasks %}
-      <li>
-        <p>{{task.title}} assigned to {{task.assigned_to.username}}. 
-          <form action="{% url 'wake_them' task.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Wake them</button>
-          </form>
-        </p>
-      </li>
-      {% endfor %}
-    {% endif %}
-  </ul>
+    <!-- Navigation Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-left">
+                <div class="logo">
+                    <a href="{% url 'home' %}">StuCollab</a>
+                </div>
+            </div>
+            
+            <div class="nav-center">
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'home_group' group.id %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Group Home</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name={{request.user.username}}&background=00BCD4&color=fff" 
+                         alt="Profile" 
+                         class="user-avatar">
+                    <span class="username">{{request.user.username}}</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="tasks-container">
+        <div class="container">
+            
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="{% url 'home_group' group.id %}">{{group.name}}</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Undone Tasks</span>
+            </nav>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for m in messages %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>{{m}}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1 class="page-title">Undone Tasks</h1>
+                        <p class="page-subtitle">{{group.name}}</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-badge">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{tasks|length}} pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks List -->
+            <section class="tasks-section">
+                {% if tasks %}
+                    <div class="tasks-grid">
+                        {% for task in tasks %}
+                        <div class="task-card">
+                            <div class="task-header">
+                                <div class="task-status">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Pending</span>
+                                </div>
+                                <div class="task-priority">
+                                    <i class="fas fa-flag"></i>
+                                </div>
+                            </div>
+
+                            <div class="task-content">
+                                <h3 class="task-title">{{task.title}}</h3>
+                                
+                                <div class="task-assignee">
+                                    <div class="assignee-info">
+                                        <img src="https://ui-avatars.com/api/?name={{task.assigned_to.username}}&background=FF9800&color=fff" 
+                                             alt="{{task.assigned_to.username}}" 
+                                             class="assignee-avatar">
+                                        <div class="assignee-details">
+                                            <span class="assignee-label">Assigned to</span>
+                                            <span class="assignee-name">{{task.assigned_to.username}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="task-actions">
+                                <form action="{% url 'wake_them' task.id %}" method="POST" class="wake-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-wake">
+                                        <i class="fas fa-bell"></i>
+                                        Wake Them Up
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>All Tasks Completed!</h2>
+                        <p>Great job! There are no pending tasks in this group.</p>
+                        <a href="{% url 'home_group' group.id %}" class="btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Group
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <!-- Info Section -->
+            <section class="info-section">
+                <div class="info-card">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="info-content">
+                        <h3>About Wake Up Feature</h3>
+                        <p>Clicking "Wake Them Up" will send a notification to the assigned member reminding them about their pending task. Use this feature responsibly to help keep the team on track.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 StuCollab. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
