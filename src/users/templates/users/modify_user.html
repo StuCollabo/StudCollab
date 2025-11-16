@@ -32,10 +32,13 @@
                          class="user-avatar">
                     <span class="username">{{request.user.username}}</span>
                 </div>
-                <a href="{% url 'logout' %}" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
+                <form action="{% url 'logout' %}" method="POST" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
             </div>
         </nav>
     </header>
