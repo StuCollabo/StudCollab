@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,13 +8,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
+#Local
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gzd(#lhs7eg@r$nx_wfp$n-$ad7yfhpgz(gvlyd_!o(l3$lg+t'
+#SECRET_KEY = 'django-insecure-gzd(#lhs7eg@r$nx_wfp$n-$ad7yfhpgz(gvlyd_!o(l3$lg+t'
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key") 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#Local
+#DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +41,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,6 +73,8 @@ WSGI_APPLICATION = 'stucollab.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+#Local
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -77,6 +85,14 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+"""
+#deployed
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgres://math:P0$t9r&$q1@localhost:5432/stucollab'
+    )
+}
+
 
 
 # Password validation
@@ -109,8 +125,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+#Local
 # Configuration MinIO (Django 4.2+)
+"""
 STORAGES = {
     "default": {
         "BACKEND": 
@@ -138,13 +155,33 @@ True,
 "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
-
+"""
+#deployed
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get("AWS_ACCESS_KEY_ID"),
+            "secret_key": os.environ.get("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": os.environ.get("AWS_STORAGE_BUCKET_NAME"),
+            "endpoint_url": os.environ.get("AWS_S3_ENDPOINT_URL"),
+            "region_name": os.environ.get("AWS_DEFAULT_REGION", "us-east-1"),
+            "signature_version": "s3v4",
+            "use_ssl": os.environ.get("AWS_USE_SSL", "True") == "True",
+            "querystring_auth": True,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
