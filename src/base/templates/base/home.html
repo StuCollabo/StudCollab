@@ -15,18 +15,18 @@
                 <h2>StuCollab</h2>
             </div>
             <div class="nav-links">
-                <a href="#">Accueil</a>
-                <a href="#">Fonctionnalités</a>
-                <a href="#">Universités</a>
-                <a href="#">Support</a>
+                {# <a href="{% url 'home' %}">Home</a> #}
+                {# <a href="#">Fonctionnalités</a>#}
+                {# <a href="#">Universités</a> #}
+                {#<a href="#">Support</a> #}
             </div>
             <div class="nav-actions">
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'dashboard' %}" class="btn-secondary">Dashboard</a>
-                    <a href="{% url 'list_groups' %}" class="btn-primary">Mes Groupes</a>
+                    <a href="{% url 'list_groups' %}" class="btn-primary">My Groups</a>
                 {% else %}
-                    <a href="{% url 'signin_signup' %}" class="btn-secondary">Se connecter</a>
-                    <a href="{% url 'signin_signup' %}" class="btn-primary">Créer un compte</a>
+                    <a href="{% url 'signin_signup' %}" class="btn-secondary">Login</a>
+                    <a href="{% url 'signin_signup' %}" class="btn-primary">Signup</a>
                 {% endif %}
             </div>
         </div>
@@ -48,17 +48,17 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Collabore, partage, avance.</h1>
+                    <h1>Collaborate, share, advance.</h1>
                     <p class="hero-description">
-                        Plateforme où les étudiants créent des groupes, partagent des documents, travaillent en équipe.
+                        A platform where users create groups, share documents, and collaborate as a team.
                     </p>
                     <div class="hero-buttons">
                         {% if not request.user.is_authenticated %}
-                            <a href="{% url 'signin_signup' %}" class="btn-primary btn-large">Essayer gratuitement</a>
-                            <a href="#about" class="btn-secondary btn-large">Voir la démo</a>
+                            <a href="{% url 'signin_signup' %}" class="btn-primary btn-large">Go, it's free.</a>
+                            <a href="#about" class="btn-secondary btn-large">See more</a>
                         {% else %}
-                            <a href="{% url 'dashboard' %}" class="btn-primary btn-large">Accéder au Dashboard</a>
-                            <a href="{% url 'list_groups' %}" class="btn-secondary btn-large">Mes Groupes</a>
+                            <a href="{% url 'dashboard' %}" class="btn-primary btn-large">Dashboard</a>
+                            <a href="{% url 'list_groups' %}" class="btn-secondary btn-large">My Groups</a>
                         {% endif %}
                     </div>
                 </div>
@@ -89,8 +89,8 @@
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <h3>Fonctionnalités clés</h3>
-                    <p>Créez des groupes, partagez des documents et collaborez en temps réel</p>
+                    <h3>Key functionnalities</h3>
+                    <p>Create groups, share documents and collaborate in real time. (I'll add it soon)</p>
                 </div>
 
                 <div class="feature-card">
@@ -100,8 +100,8 @@
                             <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                         </svg>
                     </div>
-                    <h3>Collaboration entre écoles / facultés</h3>
-                    <p>Connectez-vous avec des étudiants de différentes institutions</p>
+                    <h3>Collaboration between schools</h3>
+                    <p>Connect with students or workers from anywhere.</p>
                 </div>
 
                 <div class="feature-card">
@@ -110,8 +110,8 @@
                             <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                         </svg>
                     </div>
-                    <h3>Sécurité et stockage intelligent</h3>
-                    <p>Vos données sont protégées et accessibles partout</p>
+                    <h3>Security and smart storage</h3>
+                    <p>Your datas are protected and available anywhere</p>
                 </div>
             </div>
         </div>
@@ -120,22 +120,20 @@
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
-            <h2>L'histoire de StuCollab</h2>
+            <h2>StuCollab's story</h2>
             <div class="about-content">
                 <p>
-                    Mathieu MATONGO est un jeune étudiant en informatique. En recevant le travail de son groupe, 
-                    il a remarqué que les gens ont l'habitude de former des groupes avec des personnes dont les maisons 
-                    sont proches les unes des autres.
+                    Mathieu MATONGO is a young computer science student. When reviewing his group’s work, 
+                    he noticed that people tend to form groups with others who live close to each other.
                 </p>
                 <p>
-                    Mathieu a donc pensé à une plateforme où les étudiants et peut-être d'autres types de personnes 
-                    peuvent collaborer, envoyer des documents, attribuer des tâches ou même travailler ensemble 
-                    en temps réel sur le même document.
+                    Mathieu therefore came up with the idea of a platform where students — and potentially other types of users — can collaborate,
+      send documents, assign tasks, or even work together in real time on the same document.
                 </p>
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-number">{{count_users}}</div>
-                        <div class="stat-label">Utilisateurs actifs</div>
+                        <div class="stat-label">active users</div>
                     </div>
                 </div>
             </div>
@@ -146,11 +144,11 @@
     {% if not request.user.is_authenticated %}
     <section class="cta">
         <div class="container">
-            <h2>Prêt à commencer ?</h2>
-            <p>Rejoignez notre communauté d'étudiants collaboratifs</p>
+            <h2>Ready to start ?</h2>
+            <p>Join us!</p>
             <div class="cta-buttons">
-                <a href="{% url 'signin_signup' %}" class="btn-primary btn-large">Créer un compte</a>
-                <a href="{% url 'signin_signup' %}" class="btn-secondary btn-large">Se connecter</a>
+                <a href="{% url 'signin_signup' %}" class="btn-primary btn-large">Create an account</a>
+                <a href="{% url 'signin_signup' %}" class="btn-secondary btn-large">Sign in</a>
             </div>
         </div>
     </section>
@@ -159,7 +157,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 StuCollab. Conçu avec ❤️ par Mathieu MATONGO</p>
+            <p>&copy; 2025  StuCollab. Made with ❤️ by Mathieu MATONGO</p>
         </div>
     </footer>
 </body>

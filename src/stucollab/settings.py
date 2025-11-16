@@ -14,12 +14,13 @@ SECRET_KEY = 'django-insecure-gzd(#lhs7eg@r$nx_wfp$n-$ad7yfhpgz(gvlyd_!o(l3$lg+t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -109,10 +110,41 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Configuration MinIO (Django 4.2+)
+STORAGES = {
+    "default": {
+        "BACKEND": 
+"storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": 
+"OXP4pAEc4CQTY05i8vhP",
+            "secret_key": 
+"LM3CnPl4Fcnaqcqj4NOJsg6Nu5cfMCCp2gGb8zJx",
+            "bucket_name": 
+"stucollab",
+            "endpoint_url": 
+"http://localhost:9000",
+            "region_name": 
+"us-east-1",
+            "signature_version": 
+"s3v4",
+            "use_ssl": False,
+            "querystring_auth": 
+True,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": 
+"django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
@@ -123,7 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = "users.User"
 

@@ -67,25 +67,24 @@ def get_home_group(request, id):
 @login_required
 def join_group(request):
   form = JoinGroupForm()
-  context = {"form":form}
 
   if request.method == "POST":
     form = JoinGroupForm(request.POST)
     if form.is_valid():
       invit_code_str = form.cleaned_data["invit_code"].strip()
       print(invit_code_str)
-#      try:
-      invit_code_uuid = uuid.UUID(invit_code_str)
-      group = Group.objects.get(invit_code=invit_code_uuid)
-      if request.user != group.creator and request.user not in group.members.all():
-        group.members.add(request.user)
-        return redirect("home_group", id=group.id)
-      else:
-        url = reverse("home_group", kwargs={"id":group.id})
-        messages.info(request, f"You already belong to<a href={url}>{group.name}</a>.")
-#      except (Group.DoesNotExist, ValueError):
-#      form.add_error('invit_code', 'Invalid Code.')
-
+      try:
+        invit_code_uuid = uuid.UUID(invit_code_str)
+        group = Group.objects.get(invit_code=invit_code_uuid)
+        if request.user != group.creator and request.user not in group.members.all():
+          group.members.add(request.user)
+          return redirect("home_group", id=group.id)
+        else:
+          url = reverse("home_group", kwargs={"id":group.id})
+          messages.info(request, f"You already belong to<a href={url}>{group.name}</a>.")
+      except (Group.DoesNotExist, ValueError):
+        form.add_error('invit_code', 'Invalid Code.')
+  context = {"form":form}
   return render(request, "groups/join_group.html", context)
 
 @login_required

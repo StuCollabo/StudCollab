@@ -98,6 +98,7 @@ def delete_doc(request, id):
   doc = GroupDocument.objects.get(id=id)
   group_id = doc.group.id
   if request.method == "POST" and (doc.user == request.user or doc.group.creator == request.user) :
+    doc.file.delete(save=False)
     doc.delete()
     messages.success(request, "Document deleted successfully")
     return redirect("home_group", id=group_id)
