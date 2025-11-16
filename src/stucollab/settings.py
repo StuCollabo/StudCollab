@@ -88,11 +88,10 @@ DATABASES = {
 """
 #deployed
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://math:P0$t9r&$q1@localhost:5432/stucollab'
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL")
     )
 }
-
 
 
 # Password validation
