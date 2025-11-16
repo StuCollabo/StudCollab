@@ -2,21 +2,16 @@ import os
 from pathlib import Path
 import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-#Local
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-gzd(#lhs7eg@r$nx_wfp$n-$ad7yfhpgz(gvlyd_!o(l3$lg+t'
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key") 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#Local
-#DEBUG = True
-
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['*']
@@ -76,21 +71,6 @@ WSGI_APPLICATION = 'stucollab.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-#Local
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stucollab',
-        'USER': 'math',
-        'PASSWORD': 'P0$t9r&$q1',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-"""
-#deployed
 DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL")
@@ -128,38 +108,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-#Local
+
 # Configuration MinIO (Django 4.2+)
-"""
-STORAGES = {
-    "default": {
-        "BACKEND": 
-"storages.backends.s3boto3.S3Boto3Storage",
-        "OPTIONS": {
-            "access_key": 
-"OXP4pAEc4CQTY05i8vhP",
-            "secret_key": 
-"LM3CnPl4Fcnaqcqj4NOJsg6Nu5cfMCCp2gGb8zJx",
-            "bucket_name": 
-"stucollab",
-            "endpoint_url": 
-"http://localhost:9000",
-            "region_name": 
-"us-east-1",
-            "signature_version": 
-"s3v4",
-            "use_ssl": False,
-            "querystring_auth": 
-True,
-        },
-    },
-    "staticfiles": {
-        "BACKEND": 
-"django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
-"""
-#deployed
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
@@ -195,7 +145,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = "/media/"
-#MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = "users.User"
 
