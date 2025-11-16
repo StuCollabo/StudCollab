@@ -21,6 +21,10 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://stucollab-production.up.railway.app",
+    "http://localhost:8000",
+]
 
 # Application definition
 
