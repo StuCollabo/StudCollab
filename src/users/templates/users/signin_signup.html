@@ -78,10 +78,12 @@
                     <div class="input-group">
                         <i class="fas fa-lock"></i>
                         {{ signup_form.password1 }}
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('id_password1')" style="cursor: pointer;"></i>
                     </div>
                     <div class="input-group">
                         <i class="fas fa-lock"></i>
                         {{ signup_form.password2 }}
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('id_password2')" style="cursor: pointer;"></i>
                     </div>
                     <button type="submit" name="signup_submit">Sign Up</button>
                 </form>
@@ -115,6 +117,20 @@
                 registerTab.classList.add('active');
                 title.textContent = 'Create Account';
             }
+        }
+        function togglePassword(fieldId) {
+          const field = document.getElementById(fieldId);
+          const icon = field.parentElement.querySelector('.password-toggle');
+    
+          if (field.getAttribute('type') === 'password') {
+            field.setAttribute('type', 'text');
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+          } else {
+            field.setAttribute('type', 'password');
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+          }
         }
     </script>
 </body>
