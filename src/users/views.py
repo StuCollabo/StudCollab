@@ -103,7 +103,7 @@ def signin_signup(request):
   if request.method == "POST":
 
     if "signup_submit" in request.POST:
-    signup_form = SignUpForm(request.POST)
+      signup_form = SignUpForm(request.POST)
       if signup_form.is_valid():
         user = signup_form.save()
         login(request, user)
