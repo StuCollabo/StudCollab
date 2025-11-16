@@ -104,22 +104,22 @@ def signin_signup(request):
 
     if "signup_submit" in request.POST:
     signup_form = SignUpForm(request.POST)
-    if signup_form.is_valid():
-      user = signup_form.save()
-      login(request, user)
-      next_url = request.GET.get("next") or '/'
-      return redirect(next_url)
-    else:
-      # Messages plus spécifiques
-      errors = signup_form.errors.as_data()
-      if 'username' in errors:
-        for error in errors['username']:
-          if error.code == 'unique':
-            messages.warning(request, "This username is already taken.")
-      if 'email' in errors:
-        for error in errors['email']:
-          if error.code == 'unique':
-            messages.warning(request, "This email is already registered.")
+      if signup_form.is_valid():
+        user = signup_form.save()
+        login(request, user)
+        next_url = request.GET.get("next") or '/'
+        return redirect(next_url)
+      else:
+        # Messages plus spécifiques
+        errors = signup_form.errors.as_data()
+        if 'username' in errors:
+          for error in errors['username']:
+            if error.code == 'unique':
+              messages.warning(request, "This username is already taken.")
+        if 'email' in errors:
+          for error in errors['email']:
+            if error.code == 'unique':
+              messages.warning(request, "This email is already registered.")
 
     elif "signin_submit" in request.POST:
       signin_form = LowercaseAuthenticationForm(request, data=request.POST)
