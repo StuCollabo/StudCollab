@@ -56,7 +56,15 @@ def modify_user_info(request):
         messages.success(request, "Account updated successfully")
         return redirect("dashboard")
       else:
-        messages.info(request, "Something went wrong (bis)")
+        errors = info_form.errors.as_data()
+        if 'username' in errors:
+          for error in errors['username']:
+            if error.code == 'unique':
+              messages.warning(request, "This username is already taken.")
+        if 'email' in errors:
+          for error in errors['email']:
+            if error.code == 'unique':
+              messages.warning(request, "This email is already registered.")
 
     elif "submit_password" in request.POST:
       password_form = PasswordChangeForm(request.user,

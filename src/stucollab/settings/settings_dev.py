@@ -29,6 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 INSTALLED_APPS = [
     'storages',
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'users',
     'groups',
     'collab',
     'base',
@@ -169,4 +169,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_URL = "/moi/signin_signup"
+LOGIN_URL = "/me/signin_signup"
+
+
+
+# Pour le développement (affiche les emails dans la console)
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Pour la production (exemple avec Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'maesv6@gmail.com'
+EMAIL_HOST_PASSWORD = 'zxqx bqav amwe nfai'
+DEFAULT_FROM_EMAIL = 'maesv6@gmail.com'
+
+

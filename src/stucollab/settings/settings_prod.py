@@ -148,4 +148,15 @@ MEDIA_URL = "/media/"
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_URL = "/moi/signin_signup"
+LOGIN_URL = "/me/signin_signup"
+
+
+# Pour la production (exemple avec Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'stucollab.app@gmail.com'
+EMAIL_HOST_PASSWORD = 'xkel lmjg qboo rwpg'
+DEFAULT_FROM_EMAIL = 'stucollab.app@gmail.com'
+

@@ -60,7 +60,7 @@
                         <i class="fas fa-lock"></i>
                         {{ signin_form.password }}
                     </div>
-                    <a href="#" class="forgot">Forgot password?</a>
+                    <a href="{% url 'reset_password' %}" class="forgot">Forgot password?</a>
                     <button type="submit" name="signin_submit">Sign In</button>
                 </form>
 
