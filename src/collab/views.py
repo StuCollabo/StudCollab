@@ -2,15 +2,27 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import Upload, AddTaskForm
-from .models import GroupDocument, Task, Notification
+from .models import GroupDocument, Task, Notification, ActivityLog
 from groups.models import Group
 from groups.decorators import group_member_required, group_member_required_by_doc, task_member_required
+
+
+@login_required
+@group_member_required
+def show_logs(request, id):
+  group = get_object_or_404(Group, id=id)
+  logs = ActivityLog.objects.filter(group=group)
+  context = {"logs":logs, "group":group}
+  return render(request, "collab/logs.html", context)
 
 
 @login_required
 @task_member_required
 def wake_them(request, task_id):
   task = get_object_or_404(Task, id=task_id)
+  if task.assigned_to == None:
+    messages.info(request, "The person assigned doesn't exist anymore")
+    return redirect("undone_tasks", id=task.group.id)
   if request.method == "POST":
     notif, created = Notification.objects.get_or_create(
       task=task, user=task.assigned_to)
@@ -31,17 +43,28 @@ def see_undone_tasks(request, id):
 @task_member_required
 def toggle_task(request, task_id):
   task = get_object_or_404(Task, id=task_id)
-
   # Seul l'utilisateur assigné peut modifier la tâche
-  if request.user != task.assigned_to:
-    messages.warning(request, "Only the assigned user can update this task.")
-    return redirect("home_group", id=task.group.id)
-
-  if request.method == "POST":
-    task.completed = "completed" in request.POST
-    task.save()
-
-  return redirect("home_group", id=task.group.id)
+  if task.assigned_to == None:
+    if request.user == task.assigned_to or task.assigned_to == None:
+      if request.method == "POST":
+        task.completed = "completed" in request.POST
+        task.save()
+        log, created = ActivityLog.objects.get_or_create(group=task.group,
+          user=request.user,
+          action=f"completed '{task.title}'")
+        return redirect("home_group", id=task.group.id)
+  else:
+    if request.user != task.assigned_to:
+      messages.warning(request, "Only the assigned user can update this task.")
+      return redirect("home_group", id=task.group.id)
+    else:
+      if request.method == "POST":
+        task.completed = "completed" in request.POST
+        task.save()
+        log, created = ActivityLog.objects.get_or_create(group=task.group,
+          user=request.user,
+          action=f"completed '{task.title}'")
+        return redirect("home_group", id=task.group.id)
 
 
 @login_required
@@ -49,7 +72,6 @@ def toggle_task(request, task_id):
 def add_task(request, id):
   group = get_object_or_404(Group, id=id)
   form = AddTaskForm(group=group)
-  group = get_object_or_404(Group, id=id)
   context = {"form":form, "group":group}
   if request.method == "POST":
     form = AddTaskForm(request.POST, group=group)
@@ -86,6 +108,9 @@ def upload(request, id):
       doc.group = group
       doc.user = request.user
       doc.save()
+      log, created = ActivityLog.objects.get_or_create(
+        user=request.user, group=group,
+        action=f"uploaded '{doc.title}'")
       return redirect("home_group", id=id)
     else:
       messages.info(request, "Form is invalid.")
@@ -95,11 +120,16 @@ def upload(request, id):
 @login_required
 @group_member_required_by_doc
 def delete_doc(request, id):
-  doc = GroupDocument.objects.get(id=id)
+  doc = get_object_or_404(GroupDocument, id=id)
+  doc_title = doc.title
   group_id = doc.group.id
+  group = get_object_or_404(Group, id=group_id)
   if request.method == "POST" and (doc.user == request.user or doc.group.creator == request.user) :
     doc.file.delete(save=False)
     doc.delete()
+    log, created = ActivityLog.objects.get_or_create(
+      user=request.user, group=group,
+      action=f"deleted '{doc_title}'")
     messages.success(request, "Document deleted successfully")
     return redirect("home_group", id=group_id)
   else:

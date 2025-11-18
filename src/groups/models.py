@@ -15,3 +15,17 @@ class Group(models.Model):
 
   def __str__(self):
     return self.name
+
+
+class SubGroup(models.Model):
+  name = models.CharField(max_length=200)
+  members = models.ManyToManyField(User, related_name="SubGroupUser")
+  invit_code = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+  creator = models.ForeignKey(User, on_delete=models.SET_NULL,
+    related_name="subgroups_created", null=True)
+  head = models.ForeignKey(User, on_delete=models.SET_NULL,
+    related_name="groupes_chef", null=True)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+  def __str__(self):
+    return self.name

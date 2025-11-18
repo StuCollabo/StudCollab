@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logs - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/logs.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-users-between-lines"></i>
+                <span>StuCollab</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'list_groups' %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>My Groups</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <a href="{% url 'home_group' group.id %}" class="back-link">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Group
+                    </a>
+                    <h1 class="page-title">
+                        <i class="fas fa-history"></i>
+                        Activity Logs
+                    </h1>
+                    <p class="page-subtitle">Track all activities in this group</p>
+                </div>
+            </div>
+
+            <!-- Logs Section -->
+            <section class="logs-section">
+                {% if logs %}
+                    <div class="logs-timeline">
+                        {% for log in logs %}
+                        <div class="log-item">
+                            <div class="log-icon">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="log-content">
+                                <div class="log-header">
+                                    <span class="log-user">
+                                        <i class="fas fa-user-circle"></i>
+                                        {{ log.user.username }}
+                                    </span>
+                                    <span class="log-time">
+                                        <i class="far fa-clock"></i>
+                                        {{ log.created_at|date:"d M Y, H:i" }}
+                                    </span>
+                                </div>
+                                <div class="log-action">
+                                    {{ log.action }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-face-meh"></i>
+                        </div>
+                        <h2 class="empty-title">It's calm here 😴</h2>
+                        <p class="empty-text">No activity has been recorded yet. Start collaborating to see logs appear!</p>
+                        <a href="{% url 'home_group' group.id %}" class="btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Group
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 StuCollab. All rights reserved.</p>
+    </footer>
+</body>
+</html>

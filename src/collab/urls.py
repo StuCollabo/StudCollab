@@ -12,5 +12,6 @@ urlpatterns = [
     name="undone_tasks"),
   path('tasks/<int:task_id>/wake/',
     views.wake_them, name="wake_them"),
-
+  path("<int:id>/logs/", views.show_logs,
+    name="show_logs"),
 ]

@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-from groups.models import Group
+from groups.models import Group, SubGroup
 import hashlib
 from django.core.exceptions import ValidationError
 
@@ -13,6 +13,7 @@ class ActivityLog(models.Model):
 
 class Task(models.Model):
   group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='tasks')
+  subgroup = models.ForeignKey(SubGroup, on_delete=models.SET_NULL, null=True, blank=True)
   title = models.CharField(max_length=255)
   assigned_to = models.ForeignKey(User, null=True,
     blank=True, on_delete=models.SET_NULL)
@@ -26,7 +27,7 @@ class Task(models.Model):
 class BaseDocument(models.Model):
     title = models.CharField(max_length=100)
     file = models.FileField(upload_to='documents/')
-    hash = models.CharField(max_length=64, unique=True, blank=True)
+    hash = models.CharField(max_length=64, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     url = models.URLField(max_length=500, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE,

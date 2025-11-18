@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Subgroup - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/join_group.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-users-between-lines"></i>
+                <span>StuCollab</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'home_group' group.id %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Back to {{group.name}}</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Join a Subgroup</h1>
+                    <p class="hero-subtitle">Enter the access code to join your team</p>
+                </div>
+                <div class="hero-icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+            </section>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert">
+                            <i class="fas fa-info-circle"></i>
+                            <span>{{ message|safe }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Form Section -->
+            <section class="form-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <div class="form-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h2>Access Code</h2>
+                        <p>Enter the code provided by your team leader</p>
+                    </div>
+
+                    <form method="POST" class="join-form">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="required">*</span>
+                                    {% endif %}
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                    <small class="help-text">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="field-error">
+                                        {% for error in field.errors %}
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Join Group</span>
+                        </button>
+                    </form>
+
+                    <!-- Info Box -->
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Need an access code?</strong>
+                            <p>Ask your team leader to share the subgroup access code with you</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alternative Action -->
+                <div class="alternative-card">
+                    <div class="alt-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="alt-content">
+                        <h3>Want to create a subgroup?</h3>
+                        <p>Start your own team and invite others to collaborate</p>
+                    </div>
+                    <a href="{% url 'create_subgroup' group.id %}" class="btn-alt">
+                        <span>Create subgroup</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 StuCollab. All rights reserved.</p>
+    </footer>
+</body>
+</html>

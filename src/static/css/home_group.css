@@ -99,7 +99,7 @@ body {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     border-radius: var(--radius);
     padding: 2.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     box-shadow: var(--shadow-md);
     display: flex;
     justify-content: space-between;
@@ -161,6 +161,121 @@ body {
 .btn-action:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+}
+
+/* Quick Access Cards - NOUVEAUX STYLES */
+.quick-access-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.quick-access-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+    padding: 1.5rem 1.75rem !important;
+    background: var(--white) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-sm) !important;
+    text-decoration: none !important;
+    color: var(--text) !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border: 2px solid transparent !important;
+}
+
+.quick-access-card::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 5px !important;
+    height: 100% !important;
+    transition: width 0.3s ease !important;
+}
+
+.quick-access-card.logs-card::before {
+    background: linear-gradient(180deg, var(--purple), #7B1FA2) !important;
+}
+
+.quick-access-card.subgroups-card::before {
+    background: linear-gradient(180deg, var(--orange), #F57C00) !important;
+}
+
+.quick-access-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: var(--shadow-md) !important;
+    border-color: var(--border) !important;
+}
+
+.quick-access-card:hover::before {
+    width: 10px !important;
+}
+
+.quick-access-icon {
+    width: 55px !important;
+    height: 55px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.6rem !important;
+    flex-shrink: 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+.quick-access-card.logs-card .quick-access-icon {
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.15), rgba(156, 39, 176, 0.05)) !important;
+    color: var(--purple) !important;
+}
+
+.quick-access-card.subgroups-card .quick-access-icon {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(255, 152, 0, 0.05)) !important;
+    color: var(--orange) !important;
+}
+
+.quick-access-card:hover .quick-access-icon {
+    transform: scale(1.1) !important;
+}
+
+.quick-access-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.quick-access-info h3 {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.35rem !important;
+    color: var(--text) !important;
+}
+
+.quick-access-info p {
+    font-size: 0.875rem !important;
+    color: var(--text-light) !important;
+    margin: 0 !important;
+}
+
+.quick-access-arrow {
+    font-size: 1.35rem !important;
+    color: var(--text-muted) !important;
+    transition: all 0.3s ease !important;
+    flex-shrink: 0 !important;
+}
+
+.quick-access-card:hover .quick-access-arrow {
+    transform: translateX(6px) !important;
+}
+
+.quick-access-card.logs-card:hover .quick-access-arrow {
+    color: var(--purple) !important;
+}
+
+.quick-access-card.subgroups-card:hover .quick-access-arrow {
+    color: var(--orange) !important;
 }
 
 /* Messages */
@@ -548,6 +663,10 @@ body {
         justify-content: center;
     }
 
+    .quick-access-container {
+        grid-template-columns: 1fr;
+    }
+
     .section {
         padding: 1.5rem;
     }
@@ -588,5 +707,9 @@ body {
 
     .section {
         padding: 1.25rem;
+    }
+
+    .quick-access-card {
+        padding: 1.25rem !important;
     }
 }

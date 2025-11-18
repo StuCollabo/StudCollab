@@ -1,17 +1,144 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import JoinGroupForm, CreateGroupForm, RenameGroupForm
-from .models import Group
-from collab.models import Task
+from .forms import JoinGroupForm, CreateGroupForm, CreateSubGroupForm, RenameGroupForm, JoinSubGroupForm, RenameSubGroupForm
+from .models import Group, SubGroup
 import uuid
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from collab.models import GroupDocument, Task
+from collab.models import GroupDocument, Task, ActivityLog
 from .decorators import group_member_required
+
+
+@login_required
+@group_member_required
+def join_subgroup(request, id, sg_id):
+  form = JoinGroupForm()
+
+  if request.method == "POST":
+    form = JoinSubGroupForm(request.POST)
+    group = get_object_or_404(Group, id=id)
+    if form.is_valid():
+      invit_code_str = form.cleaned_data["invit_code"].strip()
+      print(invit_code_str)
+      try:
+        invit_code_uuid = uuid.UUID(invit_code_str)
+        subgroup = SubGroup.objects.get(
+          invit_code=invit_code_uuid)
+        if request.user != group.head and request.user not in group.members.all():
+          group.members.add(request.user)
+          log, created = ActivityLog.objects.get_or_create(
+            user=request.user, group=group,
+            action=f"joined '{subgroup.name}'")
+          return redirect("home_subgroup", id=group.id, sg_id=subgroup.id)
+        else:
+          url = reverse("home_subgroup", kwargs={"id":group.id,
+            "sg_id":subgroup.id})
+          messages.info(request, f"You already belong to<a href={url}>{subgroup.name}</a>.")
+      except (Group.DoesNotExist, ValueError):
+        form.add_error('invit_code', 'Invalid Code.')
+  context = {"form":form, "group":group}
+  return render(request, "groups/join_subgroup.html", context)
+
+
+@login_required
+@group_member_required
+def get_home_subgroup(request, id, sg_id):
+  group = get_object_or_404(Group, id=id)
+  subgroup = get_object_or_404(SubGroup, id=sg_id)
+  not_creator = request.user != subgroup.creator
+  not_head = request.user != subgroup.head
+  not_member = request.user not in subgroup.members.all()
+
+  if (not_creator) and (not_head) and (not_member):
+    messages.info(request, "You're not allowed to be there.")
+    return redirect("list_subgroups", id)
+
+  tasks = Task.objects.filter(group=group, subgroup=subgroup)
+  total_tasks = tasks.count()
+  total_completed = tasks.filter(completed=True).count()
+  documents = GroupDocument.objects.filter(group=group)
+  context = {"group":group, "subgroup":subgroup,
+    "documents":documents,
+    "tasks":tasks, "total_tasks":total_tasks,
+    "total_completed":total_completed}
+
+  return render(request, "groups/home_subgroup.html", context)
+
+@login_required
+@group_member_required
+def delete_subgroup(request, id, sg_id):
+  group = get_object_or_404(Group, id=id)
+  subgroup = get_object_or_404(SubGroup, id=sg_id)
+  is_creator = subgroup.creator == request.user or subgroup.head == request.user
+  if is_creator:
+    if request.method == "POST":
+      subgroup.delete()
+      messages.success(request, "Subgroup deleted successfully.")
+      return redirect("list_subgroups", id)
+  else:
+    messages.info(request, "You're not allowed to do this.")
+    return redirect("list_subgroups", id)
+
+
+@login_required
+@group_member_required
+def rename_subgroup(request, id, sg_id):
+  group = get_object_or_404(Group, id=id)
+  subgroup = get_object_or_404(SubGroup, id=sg_id)
+  if request.user != subgroup.creator or request.user != subgroup.head:
+    messages.info(request, "You're not allowed to do this.")
+    return redirect("home_subgroup", id, sg_id)
+
+  form = RenameSubGroupForm(instance=subgroup)
+  old_name = subgroup.name
+  context = {"old_name":old_name,
+    "form":form, "group":group, "subgroup":subgroup}
+  if request.method == "POST":
+    form = RenameSubGroupForm(request.POST, instance=subgroup)
+    if form.is_valid():
+      subgroup = form.save()
+      messages.success(request,
+        f"Subgroup {old_name} was successfully renamed to {subgroup.name}.")
+      return redirect("list_subgroups", id)
+
+  return render(request, "groups/rename_subgroup.html", context)
+
+
+@login_required
+@group_member_required
+def list_subgroups(request, id):
+  group = get_object_or_404(Group, id=id)
+  subgroups = SubGroup.objects.filter(group=group
+    ).distinct()
+  context = {"subgroups":subgroups,
+    "group":group}
+  return render(request, "groups/list_subgroups.html", context)
+
+
+@login_required
+@group_member_required
+def create_subgroup(request, id):
+  group = get_object_or_404(Group, id=id)
+  form = CreateSubGroupForm(group=group)
+  if request.method == "POST":
+    form = CreateSubGroupForm(request.POST, group=group)
+    if form.is_valid():
+      subgroup = form.save(commit=False)
+      subgroup.group = group
+      subgroup.creator = request.user
+      subgroup.save()
+      return redirect("home_subgroup", id, subgroup.id)
+  context = {"form":form, "group":group}
+  return render(request, "groups/create_subgroup.html", context)
+
 
 @login_required
 def rename_group(request, id):
   group = Group.objects.get(id=id)
+  if request.user != group.creator:
+    messages.info(request, "You're not allowed to do this.")
+    return redirect("home_group", id)
+
   form = RenameGroupForm(instance=group)
   old_name = Group.objects.get(id=id).name
   context = {"old_name":old_name,
@@ -78,6 +205,9 @@ def join_group(request):
         group = Group.objects.get(invit_code=invit_code_uuid)
         if request.user != group.creator and request.user not in group.members.all():
           group.members.add(request.user)
+          log, created = ActivityLog.objects.get_or_create(
+            user=request.user, group=group,
+            action=f"joined '{group.name}'")
           return redirect("home_group", id=group.id)
         else:
           url = reverse("home_group", kwargs={"id":group.id})

@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Subgroup - StuCollab</title>
+    <link rel="stylesheet" href="{% static 'css/create_group.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-users-between-lines"></i>
+                <span>StuCollab</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'home_group' group.id%}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Back to {{group.name}}</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'list_subgroups' group.id %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Subgroups</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Create a Subgroup</h1>
+                    <p class="hero-subtitle">Start collaborating with your team</p>
+                </div>
+                <div class="hero-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+            </section>
+
+            <!-- Form Section -->
+            <section class="form-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <div class="form-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h2>New Subgroup</h2>
+                        <p>Create a space for your team to collaborate</p>
+                    </div>
+
+                    <form method="POST" class="group-form">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="required">*</span>
+                                    {% endif %}
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-tag input-icon"></i>
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                    <small class="help-text">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="field-error">
+                                        {% for error in field.errors %}
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Create Subgroup</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Alternative Action -->
+                <div class="alternative-card">
+                    <div class="alt-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="alt-content">
+                        <h3>Want to join an existing subgroup?</h3>
+                        <p>If your group already has a subgroup, you can join it instead</p>
+                    </div>
+                    <a href="{% url 'join_subgroup' group.id %}" class="btn-alt">
+                        <span>Join Subgroup</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 StuCollab. All rights reserved.</p>
+    </footer>
+</body>
+</html>
