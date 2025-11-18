@@ -7,6 +7,7 @@ charset-normalizer==3.4.3
 click==8.2.1
 dj-database-url==3.0.1
 Django==5.2.6
+django-anymail==13.1
 django-filter==25.2
 django-storages==1.14.6
 easy-thumbnails==2.10.1
