@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'stucollab',
         'USER': 'math',
-        'PASSWORD': 'P0$t9r&$q1',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '5432',
     }
