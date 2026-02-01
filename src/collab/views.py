@@ -1,12 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import Upload, AddTaskForm
+from .forms import Upload, AddTaskForm, ModifyDocForm
 from .models import GroupDocument, Task, Notification, ActivityLog
 from groups.models import Group
 from groups.decorators import group_member_required, group_member_required_by_doc, task_member_required
 
 
+@login_required
+@group_member_required_by_doc
+def modify_doc(request, id):
+  doc = get_object_or_404(GroupDocument, id=id)
+  group = doc.group.id
+
+  if request.user != doc.user and (request.user != group.members or request.user != group.creator):
+    messages.info(request, "You're not allowed to do this.")
+    return redirect("home_group", group.id)
+
+  form = ModifyDocForm(instance=doc)
+  if request.method == "POST":
+    form = ModifyDocForm(request.POST, instance=doc)
+    if form.is_valid():
+      doc = form.save()
+      messages.success(request, "Document modified successfully.")
+      return redirect("home_group", group.id)
+    else:
+      messages.info(request, "Something went wrong.")
+      return redirect("home_group", group.id)
+  context = {"form":form, "doc":doc}
+  return render(request, "collab/modify_doc.html", context)
 @login_required
 @group_member_required
 def show_logs(request, id):

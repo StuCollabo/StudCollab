@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
   path('upload/<int:id>/', views.upload, name='upload'),
   path('delete/<int:id>/', views.delete_doc, name="delete_doc"),
-  path('download/<int:id>/', views.download_doc, name="download_doc"),
+  path('doc/download/<int:id>/', views.download_doc, name="download_doc"),
   path('<int:id>/add-task/', views.add_task, name="add_task"),
   path('tasks/<int:task_id>/toggle/', views.toggle_task, name='toggle_task'),
   path('<int:id>/tasks/undone/',
@@ -14,4 +14,6 @@ urlpatterns = [
     views.wake_them, name="wake_them"),
   path("<int:id>/logs/", views.show_logs,
     name="show_logs"),
+  path('doc/modify/<int:id>/', views.modify_doc,
+    name="modify_doc"),
 ]

@@ -55,7 +55,9 @@ class BaseDocument(models.Model):
 class GroupDocument(BaseDocument):
   group = models.ForeignKey(Group,
     on_delete=models.CASCADE)
-  is_pub = models.BooleanField(default=False)
+  subgroup = models.ForeignKey(SubGroup,
+    on_delete=models.SET_NULL, null=True, blank=True)
+  is_visible = models.BooleanField(default=False)
 
 """
   def clean(self):

@@ -3,16 +3,23 @@ from .models import GroupDocument, Task
 from users.models import User
 from groups.models import SubGroup
 
+
+class ModifyDocForm(forms.ModelForm):
+  class Meta:
+    model = GroupDocument
+    fields = ["title", "is_visible"]
+
 class Upload(forms.ModelForm):
   class Meta:
     model = GroupDocument
-    fields = ["title", "file"]
+    fields = ["title", "file", "is_visible"]
 
 
 class AddTaskForm(forms.ModelForm):
   class Meta:
     model = Task
     fields = ["title", "assigned_to", "subgroup"]
+
 
   def __init__(self, *args, **kwargs):
     group = kwargs.pop("group", None)

@@ -185,6 +185,9 @@
                                 <a href="{{ document.file.url }}" class="btn-icon" title="Download">
                                     <i class="fas fa-download"></i>
                                 </a>
+                                <a href="{% url 'modify_doc' document.id %}" class="btn-icon" title="Download">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                                 <form action="{% url 'delete_doc' document.id %}" method="POST" class="delete-form">
                                     {% csrf_token %}
                                     <button type="submit" class="btn-icon btn-delete" title="Delete">

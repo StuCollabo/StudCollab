@@ -56,7 +56,8 @@ def get_home_subgroup(request, id, sg_id):
   tasks = Task.objects.filter(group=group, subgroup=subgroup)
   total_tasks = tasks.count()
   total_completed = tasks.filter(completed=True).count()
-  documents = GroupDocument.objects.filter(group=group)
+  documents = GroupDocument.objects.filter(group=group,
+    subgroup=subgroup)
   context = {"group":group, "subgroup":subgroup,
     "documents":documents,
     "tasks":tasks, "total_tasks":total_tasks,
@@ -184,7 +185,7 @@ def get_home_group(request, id):
   tasks = Task.objects.filter(group=group)
   total_tasks = tasks.count()
   total_completed = tasks.filter(completed=True).count()
-  documents = GroupDocument.objects.filter(group=group)
+  documents = GroupDocument.objects.filter(group=group, is_visible=True)
   context = {"group":group, "documents":documents,
     "tasks":tasks, "total_tasks":total_tasks,
     "total_completed":total_completed}
