@@ -14,20 +14,16 @@ Ce projet permet aux étudiants de collaborer efficacement en ligne sur des tâc
 ## Technologies utilisées
 
 - **Backend** : Django (Python)
-- **Frontend** : HTML, CSS, JavaScript (avec des frameworks comme React.js ou autres, selon ton choix)
-- **Base de données** : SQLite ou PostgreSQL (selon la configuration du projet)
-- **Stockage de fichiers** : Utilisation de stockage local ou d’un service cloud (comme AWS S3) pour les fichiers.
+- **Frontend** : HTML, CSS
+- **Base de données** : SQLite ou PostgreSQL (selon vous)
+- **Stockage de fichiers** : Utilisation de stockage local (comme MinIO) ou d’un service cloud (comme AWS S3) pour les fichiers.
 
 ## Installation
 
 1. Clonez le projet sur votre machine locale :
-   ```
-   https://github.com/StuCollabo/StudCollab.git```
-
+   `https://github.com/StuCollabo/StudCollab.git`
 2. Installez les dépendances :
-```
-pip install -r requirements.txt
-```
+`~pip install -r requirements.txt`
 
 3. Configurez la base de données (PostgreSQL):
 ```
