@@ -4,6 +4,12 @@
 
 Ce projet permet aux étudiants de collaborer efficacement en ligne sur des tâches et fichiers. L’application facilite la gestion de projets de groupe, avec des fonctionnalités permettant de diviser le travail, assigner des responsabilités et partager des fichiers.
 
+## Aperçu
+
+![espace de groupe](assets/group_space.jpg)
+![liste de groupes](assets/list_groups.jpg)
+![log d'activité](assets/activity_log.jpg)
+
 ## Fonctionnalités
 
 - **Gestion des tâches** : Créez des tâches, assignez-les à des membres du groupe, et suivez leur progression.
