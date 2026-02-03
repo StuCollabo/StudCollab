@@ -7,7 +7,7 @@ Ce projet permet aux étudiants de collaborer efficacement en ligne sur des tâc
 ## Aperçu
 
 ![espace de groupe](assets/group_space.jpg)
-![liste de groupes](assets/list_groups.jpg)
+![liste de groupes](assets/list_of_groups.jpg)
 ![log d'activité](assets/activity_log.jpg)
 
 ## Fonctionnalités
